@@ -1,0 +1,17 @@
+[Unit]
+Description=LegacyToCloud FastAPI Backend
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/usr/local/www/legacytocloud.com/backend
+Environment="PATH=/usr/local/www/legacytocloud.com/backend/venv/bin"
+EnvironmentFile=/usr/local/www/legacytocloud.com/.env
+ExecStart=/usr/local/www/legacytocloud.com/backend/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8003
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow admin/dashboard areas from indexing
+Disallow: /dashboard/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://legacytocloud.com/sitemap.xml

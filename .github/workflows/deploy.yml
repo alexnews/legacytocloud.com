@@ -1,0 +1,110 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  # Build and test backend
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build check
+        run: |
+          python -c "from app.main import app; print('Backend builds successfully')"
+
+  # Build frontend
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build static export
+        run: npm run build
+        env:
+          STATIC_EXPORT: 'true'
+          NEXT_PUBLIC_API_URL: https://legacytocloud.com/api
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/out
+          retention-days: 1
+
+  # Deploy to production server
+  deploy:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download frontend build
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: ./frontend-out
+
+      - name: Deploy frontend to www/
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "frontend-out/*"
+          target: "/usr/local/www/legacytocloud.com/www"
+          strip_components: 1
+          overwrite: true
+
+      - name: Deploy backend and restart service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /usr/local/www/legacytocloud.com
+            git pull origin master
+
+            # Setup backend
+            cd backend
+            python3 -m venv venv 2>/dev/null || true
+            source venv/bin/activate
+            pip install -r requirements.txt
+
+            # Restart API service
+            sudo systemctl restart legacytocloud-api || echo "Service not configured yet"

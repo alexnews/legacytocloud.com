@@ -9,7 +9,7 @@ export default function Home() {
           </div>
           <div className="flex items-center space-x-4">
             <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
-            <a href="#pricing" className="text-gray-600 hover:text-gray-900">Pricing</a>
+            <a href="/about" className="text-gray-600 hover:text-gray-900">About</a>
             <a href="/login" className="text-gray-600 hover:text-gray-900">Login</a>
             <a href="/register" className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">
               Get Started

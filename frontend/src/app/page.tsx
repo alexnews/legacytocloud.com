@@ -27,7 +27,7 @@ export default function Home() {
               <span className="block text-primary-600">Made Simple</span>
             </h1>
             <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
-              Migrate your legacy MySQL and PostgreSQL databases to modern cloud platforms
+              Migrate your legacy MSSQL, MySQL and PostgreSQL databases to Snowflake
               with automated analysis, proven playbooks, and zero guesswork.
             </p>
             <div className="mt-10 flex justify-center space-x-4">
@@ -48,20 +48,24 @@ export default function Home() {
               Supported Migration Paths
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {/* MySQL to PostgreSQL */}
+              {/* MSSQL to Snowflake */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">🐬</span>
+                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                    <span className="text-sm font-bold text-red-600">SQL</span>
                   </div>
-                  <span className="mx-3 text-gray-400">→</span>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">🐘</span>
+                  <svg className="mx-3 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                  <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-cyan-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L4 6v12l8 4 8-4V6l-8-4zm0 2.18l5.45 2.73L12 9.64 6.55 6.91 12 4.18zM6 8.27l5 2.5v7.96l-5-2.5V8.27zm12 7.96l-5 2.5v-7.96l5-2.5v7.96z"/>
+                    </svg>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">MySQL → PostgreSQL</h3>
+                <h3 className="text-xl font-semibold text-gray-900">MSSQL &rarr; Snowflake</h3>
                 <p className="mt-2 text-gray-600">
-                  Modernize your LAMP stack with the most powerful open-source database.
+                  Migrate SQL Server workloads to the cloud data warehouse.
                 </p>
               </div>
 
@@ -69,14 +73,18 @@ export default function Home() {
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">🐬</span>
+                    <span className="text-sm font-bold text-orange-600">My</span>
                   </div>
-                  <span className="mx-3 text-gray-400">→</span>
+                  <svg className="mx-3 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                   <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">❄️</span>
+                    <svg className="w-6 h-6 text-cyan-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L4 6v12l8 4 8-4V6l-8-4zm0 2.18l5.45 2.73L12 9.64 6.55 6.91 12 4.18zM6 8.27l5 2.5v7.96l-5-2.5V8.27zm12 7.96l-5 2.5v-7.96l5-2.5v7.96z"/>
+                    </svg>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">MySQL → Snowflake</h3>
+                <h3 className="text-xl font-semibold text-gray-900">MySQL &rarr; Snowflake</h3>
                 <p className="mt-2 text-gray-600">
                   Move your analytics workloads to the cloud data warehouse.
                 </p>
@@ -86,14 +94,18 @@ export default function Home() {
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">🐘</span>
+                    <span className="text-sm font-bold text-blue-600">PG</span>
                   </div>
-                  <span className="mx-3 text-gray-400">→</span>
+                  <svg className="mx-3 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                   <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">❄️</span>
+                    <svg className="w-6 h-6 text-cyan-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L4 6v12l8 4 8-4V6l-8-4zm0 2.18l5.45 2.73L12 9.64 6.55 6.91 12 4.18zM6 8.27l5 2.5v7.96l-5-2.5V8.27zm12 7.96l-5 2.5v-7.96l5-2.5v7.96z"/>
+                    </svg>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">PostgreSQL → Snowflake</h3>
+                <h3 className="text-xl font-semibold text-gray-900">PostgreSQL &rarr; Snowflake</h3>
                 <p className="mt-2 text-gray-600">
                   Scale your analytics with a dedicated cloud warehouse.
                 </p>
@@ -111,7 +123,9 @@ export default function Home() {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">🔍</span>
+                  <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
                 </div>
                 <h3 className="text-lg font-semibold">1. Analyze</h3>
                 <p className="mt-2 text-gray-600">
@@ -120,7 +134,9 @@ export default function Home() {
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">📋</span>
+                  <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                  </svg>
                 </div>
                 <h3 className="text-lg font-semibold">2. Plan</h3>
                 <p className="mt-2 text-gray-600">
@@ -129,7 +145,9 @@ export default function Home() {
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">🚀</span>
+                  <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
                 </div>
                 <h3 className="text-lg font-semibold">3. Migrate</h3>
                 <p className="mt-2 text-gray-600">
@@ -138,7 +156,9 @@ export default function Home() {
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">✅</span>
+                  <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
                 <h3 className="text-lg font-semibold">4. Validate</h3>
                 <p className="mt-2 text-gray-600">
@@ -186,7 +206,7 @@ export default function Home() {
             <div>
               <h4 className="text-white font-semibold mb-4">Migrations</h4>
               <ul className="space-y-2">
-                <li><a href="/mysql-to-postgresql" className="hover:text-white">MySQL to PostgreSQL</a></li>
+                <li><a href="/mssql-to-snowflake" className="hover:text-white">MSSQL to Snowflake</a></li>
                 <li><a href="/mysql-to-snowflake" className="hover:text-white">MySQL to Snowflake</a></li>
                 <li><a href="/postgresql-to-snowflake" className="hover:text-white">PostgreSQL to Snowflake</a></li>
               </ul>
@@ -201,7 +221,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-            <p>&copy; 2024 LegacyToCloud. All rights reserved.</p>
+            <p>&copy; 2025 LegacyToCloud. All rights reserved.</p>
           </div>
         </div>
       </footer>

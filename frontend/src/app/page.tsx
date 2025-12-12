@@ -1,3 +1,7 @@
+'use client';
+
+import ShareButtons from '@/components/ShareButtons';
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -8,7 +12,9 @@ export default function Home() {
             <span className="text-2xl font-bold text-primary-600">LegacyToCloud</span>
           </div>
           <div className="flex items-center space-x-4">
-            <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
+            <a href="/features" className="text-gray-600 hover:text-gray-900">Features</a>
+            <a href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</a>
+            <a href="/docs" className="text-gray-600 hover:text-gray-900">Docs</a>
             <a href="/about" className="text-gray-600 hover:text-gray-900">About</a>
             <a href="/login" className="text-gray-600 hover:text-gray-900">Login</a>
             <a href="/register" className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">
@@ -30,11 +36,18 @@ export default function Home() {
               Migrate your legacy MSSQL, MySQL and PostgreSQL databases to Snowflake
               with automated analysis, proven playbooks, and zero guesswork.
             </p>
+            <div className="mt-6 flex justify-center">
+              <ShareButtons
+                title="LegacyToCloud - Database Migration Made Simple"
+                description="Migrate MSSQL, MySQL and PostgreSQL to Snowflake with automated analysis"
+                url="https://legacytocloud.com"
+              />
+            </div>
             <div className="mt-10 flex justify-center space-x-4">
               <a href="/register" className="bg-primary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-primary-700">
                 Start Free Analysis
               </a>
-              <a href="#how-it-works" className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-50">
+              <a href="/how-it-works" className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-50">
                 See How It Works
               </a>
             </div>
@@ -198,8 +211,8 @@ export default function Home() {
             <div>
               <h4 className="text-white font-semibold mb-4">Product</h4>
               <ul className="space-y-2">
-                <li><a href="#features" className="hover:text-white">Features</a></li>
-                <li><a href="#pricing" className="hover:text-white">Pricing</a></li>
+                <li><a href="/features" className="hover:text-white">Features</a></li>
+                <li><a href="/pricing" className="hover:text-white">Pricing</a></li>
                 <li><a href="/docs" className="hover:text-white">Documentation</a></li>
               </ul>
             </div>

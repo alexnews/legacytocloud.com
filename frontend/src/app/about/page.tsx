@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import ShareButtons from '@/components/ShareButtons';
 
 export default function AboutPage() {
   return (
@@ -31,6 +32,13 @@ export default function AboutPage() {
           <p className="text-xl text-gray-600">
             Making database migrations safe, predictable, and affordable.
           </p>
+          <div className="mt-6 flex justify-center">
+            <ShareButtons
+              title="About LegacyToCloud"
+              description="Making database migrations safe, predictable, and affordable"
+              url="https://legacytocloud.com/about"
+            />
+          </div>
         </div>
 
         {/* Mission */}

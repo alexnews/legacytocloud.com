@@ -76,7 +76,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">MSSQL &rarr; Snowflake</h3>
+                <h3 className="text-xl font-semibold text-gray-900">MSSQL to Snowflake</h3>
                 <p className="mt-2 text-gray-600">
                   Migrate SQL Server workloads to the cloud data warehouse.
                 </p>
@@ -97,7 +97,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">MySQL &rarr; Snowflake</h3>
+                <h3 className="text-xl font-semibold text-gray-900">MySQL to Snowflake</h3>
                 <p className="mt-2 text-gray-600">
                   Move your analytics workloads to the cloud data warehouse.
                 </p>
@@ -118,7 +118,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">PostgreSQL &rarr; Snowflake</h3>
+                <h3 className="text-xl font-semibold text-gray-900">PostgreSQL to Snowflake</h3>
                 <p className="mt-2 text-gray-600">
                   Scale your analytics with a dedicated cloud warehouse.
                 </p>

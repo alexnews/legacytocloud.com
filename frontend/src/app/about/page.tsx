@@ -146,7 +146,7 @@ export default function AboutPage() {
                 <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                   <span className="text-xs font-bold text-red-600">SQL</span>
                 </div>
-                <span className="text-gray-400">&rarr;</span>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                 <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-cyan-600" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L4 6v12l8 4 8-4V6l-8-4zm0 2.18l5.45 2.73L12 9.64 6.55 6.91 12 4.18zM6 8.27l5 2.5v7.96l-5-2.5V8.27zm12 7.96l-5 2.5v-7.96l5-2.5v7.96z"/>
@@ -158,7 +158,7 @@ export default function AboutPage() {
                 <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                   <span className="text-xs font-bold text-orange-600">My</span>
                 </div>
-                <span className="text-gray-400">&rarr;</span>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                 <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-cyan-600" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L4 6v12l8 4 8-4V6l-8-4zm0 2.18l5.45 2.73L12 9.64 6.55 6.91 12 4.18zM6 8.27l5 2.5v7.96l-5-2.5V8.27zm12 7.96l-5 2.5v-7.96l5-2.5v7.96z"/>
@@ -170,7 +170,7 @@ export default function AboutPage() {
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                   <span className="text-xs font-bold text-blue-600">PG</span>
                 </div>
-                <span className="text-gray-400">&rarr;</span>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                 <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-cyan-600" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L4 6v12l8 4 8-4V6l-8-4zm0 2.18l5.45 2.73L12 9.64 6.55 6.91 12 4.18zM6 8.27l5 2.5v7.96l-5-2.5V8.27zm12 7.96l-5 2.5v-7.96l5-2.5v7.96z"/>

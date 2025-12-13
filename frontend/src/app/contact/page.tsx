@@ -174,7 +174,7 @@ export default function ContactPage() {
                 Looking for custom solutions, on-premise deployment, or volume pricing?
               </p>
               <Link href="/pricing" className="text-primary-600 font-medium hover:text-primary-700">
-                View Enterprise Plans &rarr;
+                View Enterprise Plans
               </Link>
             </div>
           </div>

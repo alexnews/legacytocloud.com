@@ -21,6 +21,7 @@
 - Fixed emoji encoding issues - replaced all emojis with SVG icons
 - Added Inter font from Google Fonts for professional appearance
 - Updated navigation with links to all new pages
+- Fixed `&rarr;` HTML entity encoding issues - replaced with "to" text and SVG arrows
 
 ### 4. New Marketing Pages Created
 
@@ -50,18 +51,30 @@
   - Copy image to clipboard
 - Added to all pages (homepage, features, pricing, about, docs, contact, migration guides, how-it-works)
 
+### 7. Sitemap Updated
+- Updated `public/sitemap.xml` with all 12 public pages
+- Changed URLs from `https://legacytocloud.com` to `https://www.legacytocloud.com`
+- Set appropriate priorities for SEO
+
+### 8. Apache Configuration Updated
+- Added UTF-8 encoding configuration:
+  - `AddDefaultCharset UTF-8`
+  - `AddCharset utf-8 .html .css .js .json .xml .svg`
+- Added SPA routing rules for Next.js static export
+- Config file: `config/apache/legacytocloud.conf`
+
 ---
 
 ## Current Site Structure
 
 ```
 /                           - Homepage (landing)
+/how-it-works               - 4-step process walkthrough
 /features                   - Features page
 /pricing                    - Pricing tiers
 /docs                       - Documentation
 /about                      - About us
 /contact                    - Contact form
-/how-it-works               - 4-step process
 /mssql-to-snowflake         - MSSQL migration guide
 /mysql-to-snowflake         - MySQL migration guide
 /postgresql-to-snowflake    - PostgreSQL migration guide
@@ -84,15 +97,61 @@
 
 ---
 
+## Files Modified/Created Today
+
+### New Files
+- `src/app/about/page.tsx`
+- `src/app/features/page.tsx`
+- `src/app/pricing/page.tsx`
+- `src/app/docs/page.tsx`
+- `src/app/contact/page.tsx`
+- `src/app/how-it-works/page.tsx`
+- `src/app/mssql-to-snowflake/page.tsx`
+- `src/app/mysql-to-snowflake/page.tsx`
+- `src/app/postgresql-to-snowflake/page.tsx`
+- `src/components/ShareButtons.tsx`
+- `steps/PROGRESS.md`
+
+### Modified Files
+- `src/app/page.tsx` - Navigation updates, share buttons, fixed arrow encoding
+- `src/app/layout.tsx` - Inter font
+- `src/app/about/page.tsx` - Fixed arrow encoding (replaced `&rarr;` with SVG)
+- `src/app/contact/page.tsx` - Fixed arrow encoding
+- `public/sitemap.xml` - Added all pages, updated to www subdomain
+- `config/apache/legacytocloud.conf` - UTF-8 encoding, SPA routing
+- `.github/workflows/deploy.yml` - STATIC_EXPORT env var
+
+---
+
+## Deployment Checklist
+
+### 1. Push Changes to Git
+```bash
+git add -A
+git commit -m "Add marketing pages, share buttons, sitemap, Apache config"
+git push origin master
+```
+
+### 2. Update Apache Config on Production
+Copy updated config and restart Apache:
+```bash
+# FreeBSD
+sudo apachectl configtest
+sudo apachectl graceful
+
+# Linux
+sudo apache2ctl configtest
+sudo systemctl reload apache2
+```
+
+---
+
 ## Next Steps
 
-### Immediate (Deploy Current Changes)
-1. Push current changes to trigger deployment:
-   ```bash
-   git add -A
-   git commit -m "Add How It Works page, share buttons, and marketing pages"
-   git push origin master
-   ```
+### Immediate
+1. Deploy current changes (git push)
+2. Apply Apache config changes on production server
+3. Verify all pages render correctly with UTF-8
 
 ### Short-term Priorities
 1. **Backend API Integration**
@@ -136,27 +195,6 @@
 
 ---
 
-## Files Modified/Created Today
-
-### New Files
-- `src/app/about/page.tsx`
-- `src/app/features/page.tsx`
-- `src/app/pricing/page.tsx`
-- `src/app/docs/page.tsx`
-- `src/app/contact/page.tsx`
-- `src/app/how-it-works/page.tsx`
-- `src/app/mssql-to-snowflake/page.tsx`
-- `src/app/mysql-to-snowflake/page.tsx`
-- `src/app/postgresql-to-snowflake/page.tsx`
-- `src/components/ShareButtons.tsx`
-
-### Modified Files
-- `src/app/page.tsx` - Navigation updates, share buttons
-- `src/app/layout.tsx` - Inter font
-- `.github/workflows/deploy.yml` - STATIC_EXPORT env var
-
----
-
 ## Build Status
 
 All 18 pages build successfully:
@@ -176,3 +214,24 @@ All 18 pages build successfully:
 - `/dashboard/connections`
 - `/dashboard/projects`
 - `/_not-found`
+
+---
+
+## Sitemap URLs (for SEO)
+
+All URLs use `https://www.legacytocloud.com`:
+
+| URL | Priority |
+|-----|----------|
+| `/` | 1.0 |
+| `/how-it-works` | 0.9 |
+| `/features` | 0.9 |
+| `/pricing` | 0.9 |
+| `/docs` | 0.8 |
+| `/mssql-to-snowflake` | 0.8 |
+| `/mysql-to-snowflake` | 0.8 |
+| `/postgresql-to-snowflake` | 0.8 |
+| `/about` | 0.7 |
+| `/contact` | 0.7 |
+| `/login` | 0.6 |
+| `/register` | 0.6 |

@@ -10,12 +10,36 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [notRobot, setNotRobot] = useState(false);
+  const [robotChallenge, setRobotChallenge] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const handleRobotCheck = () => {
+    // Simple JS challenge - real user interaction required
+    setRobotChallenge(true);
+    setTimeout(() => {
+      setNotRobot(true);
+    }, 500);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validate password match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    // Validate robot check
+    if (!notRobot) {
+      setError('Please confirm you are not a robot');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -96,6 +120,55 @@ export default function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               />
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                required
+                minLength={6}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 ${
+                  confirmPassword && password !== confirmPassword
+                    ? 'border-red-300 bg-red-50'
+                    : 'border-gray-300'
+                }`}
+              />
+              {confirmPassword && password !== confirmPassword && (
+                <p className="mt-1 text-sm text-red-600">Passwords do not match</p>
+              )}
+            </div>
+
+            <div className="flex items-center">
+              <button
+                type="button"
+                onClick={handleRobotCheck}
+                disabled={notRobot}
+                className={`flex items-center justify-center w-6 h-6 border-2 rounded mr-3 transition-all ${
+                  notRobot
+                    ? 'bg-green-500 border-green-500'
+                    : robotChallenge
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                {notRobot && (
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+                {robotChallenge && !notRobot && (
+                  <div className="w-3 h-3 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+                )}
+              </button>
+              <label className="text-sm text-gray-700">
+                I am not a robot
+              </label>
             </div>
 
             <button

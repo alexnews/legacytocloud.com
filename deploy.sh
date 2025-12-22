@@ -35,7 +35,7 @@ echo ""
 echo "[3/4] Building frontend..."
 cd "$SCRIPT_DIR/frontend"
 npm install
-STATIC_EXPORT=true NEXT_PUBLIC_API_URL=https://legacytocloud.com/api npm run build
+STATIC_EXPORT=true NEXT_PUBLIC_API_URL=https://www.legacytocloud.com/api npm run build
 echo "  Copying to www folder..."
 cp -r out/* $DEPLOY_DIR/www/
 

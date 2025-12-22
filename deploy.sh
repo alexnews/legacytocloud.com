@@ -26,7 +26,14 @@ fi
 # Step 2: Start Docker containers (Postgres + Redis)
 echo ""
 echo "[2/7] Starting Docker containers..."
-docker-compose up -d
+if command -v docker-compose &> /dev/null; then
+    docker-compose up -d
+elif command -v docker &> /dev/null; then
+    docker compose up -d
+else
+    echo "  ERROR: Docker not found. Please install Docker."
+    exit 1
+fi
 echo "  Waiting for database to be ready..."
 sleep 5
 

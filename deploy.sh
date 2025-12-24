@@ -1,54 +1,76 @@
 #!/bin/bash
 
-# LegacyToCloud - Production Redeploy Script for Ubuntu 22.04
-# This script redeploys code from GitHub to existing production server
-# Does NOT touch database or existing configuration
+# LegacyToCloud - Production Deploy Script
+# Usage: ./deploy.sh [all|frontend|backend]
+# Default: all
 
 set -e
 
 DEPLOY_DIR="/usr/local/www/legacytocloud.com"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+MODE="${1:-all}"
 
 echo "=========================================="
-echo "  LegacyToCloud Code Redeploy"
-echo "  Server: Ubuntu 22.04"
+echo "  LegacyToCloud Deploy"
+echo "  Mode: $MODE"
 echo "=========================================="
 
-# Step 1: Backend - install Python dependencies
-echo ""
-echo "[1/4] Installing backend dependencies..."
-cd $DEPLOY_DIR/backend
-source venv/bin/activate
-pip install -r requirements.txt
-deactivate
+deploy_backend() {
+    echo ""
+    echo "[Backend] Installing dependencies..."
+    cd $DEPLOY_DIR/backend
+    source venv/bin/activate
+    pip install -r requirements.txt --quiet
 
-# Step 2: Run database migrations
-echo ""
-echo "[2/4] Running database migrations..."
-cd $DEPLOY_DIR/backend
-source venv/bin/activate
-alembic upgrade head
-deactivate
+    echo "[Backend] Running migrations..."
+    alembic upgrade head
+    deactivate
 
-# Step 3: Build and deploy frontend
-echo ""
-echo "[3/4] Building frontend..."
-cd "$SCRIPT_DIR/frontend"
-npm install
-STATIC_EXPORT=true NEXT_PUBLIC_API_URL=https://www.legacytocloud.com/api npm run build
-echo "  Copying to www folder..."
-cp -r out/* $DEPLOY_DIR/www/
+    echo "[Backend] Restarting service..."
+    sudo systemctl restart legacytocloud-api
 
-# Step 4: Restart backend service
-echo ""
-echo "[4/4] Restarting backend service..."
-sudo systemctl restart legacytocloud-api
+    echo "[Backend] Done!"
+}
+
+deploy_frontend() {
+    echo ""
+    echo "[Frontend] Installing dependencies..."
+    cd "$SCRIPT_DIR/frontend"
+    npm install --silent
+
+    echo "[Frontend] Building..."
+    STATIC_EXPORT=true NEXT_PUBLIC_API_URL=https://legacytocloud.com/api npm run build
+
+    echo "[Frontend] Copying to www..."
+    cp -r out/* $DEPLOY_DIR/www/
+
+    echo "[Frontend] Done!"
+}
+
+case $MODE in
+    frontend|fe|f)
+        deploy_frontend
+        ;;
+    backend|be|b)
+        deploy_backend
+        ;;
+    all|a|"")
+        deploy_backend
+        deploy_frontend
+        ;;
+    *)
+        echo "Usage: ./deploy.sh [all|frontend|backend]"
+        echo "  all      - Deploy both backend and frontend (default)"
+        echo "  frontend - Deploy frontend only (alias: fe, f)"
+        echo "  backend  - Deploy backend only (alias: be, b)"
+        exit 1
+        ;;
+esac
 
 echo ""
 echo "=========================================="
-echo "  Redeploy Complete!"
+echo "  Deploy Complete!"
 echo "=========================================="
 echo ""
-echo "Verify:"
-echo "  curl https://legacytocloud.com/api/health"
+echo "Verify: curl https://legacytocloud.com/api/health"
 echo ""

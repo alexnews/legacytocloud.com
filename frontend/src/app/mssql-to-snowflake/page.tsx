@@ -233,6 +233,8 @@ export default function MSSQLToSnowflakePage() {
                 <li><Link href="/mssql-to-snowflake" className="hover:text-white">MSSQL to Snowflake</Link></li>
                 <li><Link href="/mysql-to-snowflake" className="hover:text-white">MySQL to Snowflake</Link></li>
                 <li><Link href="/postgresql-to-snowflake" className="hover:text-white">PostgreSQL to Snowflake</Link></li>
+                <li><Link href="/mariadb-to-snowflake" className="hover:text-white">MariaDB to Snowflake</Link></li>
+                <li><Link href="/aurora-to-snowflake" className="hover:text-white">Aurora to Snowflake</Link></li>
               </ul>
             </div>
             <div>

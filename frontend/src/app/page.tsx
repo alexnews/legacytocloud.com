@@ -222,6 +222,8 @@ export default function Home() {
                 <li><a href="/mssql-to-snowflake" className="hover:text-white">MSSQL to Snowflake</a></li>
                 <li><a href="/mysql-to-snowflake" className="hover:text-white">MySQL to Snowflake</a></li>
                 <li><a href="/postgresql-to-snowflake" className="hover:text-white">PostgreSQL to Snowflake</a></li>
+                <li><a href="/mariadb-to-snowflake" className="hover:text-white">MariaDB to Snowflake</a></li>
+                <li><a href="/aurora-to-snowflake" className="hover:text-white">Aurora to Snowflake</a></li>
               </ul>
             </div>
             <div>

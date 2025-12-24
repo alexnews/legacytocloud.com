@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import ShareButtons from '@/components/ShareButtons';
 
-export default function PostgreSQLToSnowflakePage() {
+export default function MariaDBToSnowflakePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
@@ -27,8 +27,8 @@ export default function PostgreSQLToSnowflakePage() {
         {/* Hero */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center">
-              <span className="text-xl font-bold text-blue-600">PG</span>
+            <div className="w-16 h-16 bg-amber-100 rounded-xl flex items-center justify-center">
+              <span className="text-xl font-bold text-amber-700">Ma</span>
             </div>
             <svg className="mx-4 w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -40,69 +40,105 @@ export default function PostgreSQLToSnowflakePage() {
             </div>
           </div>
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-            PostgreSQL to Snowflake Migration
+            MariaDB to Snowflake Migration
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Scale your PostgreSQL analytics workloads with Snowflake's cloud-native
-            architecture and near-unlimited concurrency.
+            Migrate your MariaDB databases to Snowflake cloud data warehouse
+            for enterprise-grade analytics and unlimited scalability.
           </p>
           <div className="mt-6 flex justify-center">
             <ShareButtons
-              title="PostgreSQL to Snowflake Migration"
-              description="Scale PostgreSQL analytics with Snowflake cloud-native architecture"
-              url="https://legacytocloud.com/postgresql-to-snowflake"
+              title="MariaDB to Snowflake Migration"
+              description="Migrate MariaDB to Snowflake for enterprise analytics and scalability"
+              url="https://legacytocloud.com/mariadb-to-snowflake"
             />
           </div>
         </div>
 
         {/* Why Migrate */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Why Migrate from PostgreSQL to Snowflake?</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Why Migrate from MariaDB to Snowflake?</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No More VACUUM</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Petabyte-Scale Analytics</h3>
               <p className="text-gray-600">
-                Forget about VACUUM, ANALYZE, and bloat management. Snowflake handles it all automatically.
+                Run complex analytical queries across massive datasets without impacting your production MariaDB workloads.
               </p>
             </div>
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Instant Elasticity</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Zero Infrastructure Management</h3>
               <p className="text-gray-600">
-                Scale from 1 to 1000+ nodes in seconds. No replication lag, no connection limits.
+                No more MariaDB tuning, replication lag, or storage upgrades. Snowflake handles all infrastructure.
               </p>
             </div>
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Semi-Structured Data</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Pay Per Query</h3>
               <p className="text-gray-600">
-                Native support for JSON, Avro, Parquet. Query nested data without ETL.
+                Only pay for compute when running queries. No costs for idle databases sitting unused.
               </p>
             </div>
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Multi-Cloud</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Enterprise Security</h3>
               <p className="text-gray-600">
-                Run on AWS, Azure, or GCP. Replicate data across clouds for disaster recovery.
+                SOC 2, HIPAA, and PCI DSS compliance built-in with end-to-end encryption.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* MariaDB Specific Features */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">MariaDB-Specific Considerations</h2>
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+            <p className="text-gray-700 mb-4">
+              MariaDB includes features not found in MySQL. Our migration tool handles these automatically:
+            </p>
+            <ul className="space-y-2 text-gray-600">
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-amber-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>Sequences</strong> - Converted to Snowflake sequences with matching start/increment values</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-amber-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>System-Versioned Tables</strong> - Mapped to Snowflake Time Travel and Streams</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-amber-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>Virtual Columns</strong> - Recreated as Snowflake computed columns where supported</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-amber-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>JSON Columns</strong> - Native support via Snowflake VARIANT type</span>
+              </li>
+            </ul>
           </div>
         </section>
 
@@ -113,31 +149,31 @@ export default function PostgreSQLToSnowflakePage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PostgreSQL Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MariaDB Type</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Snowflake Type</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">INTEGER, BIGINT</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">INT, BIGINT, TINYINT</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">NUMBER</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Direct mapping</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">VARCHAR, TEXT</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">VARCHAR, TEXT, LONGTEXT</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">VARCHAR</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Up to 16MB</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">TIMESTAMP, TIMESTAMPTZ</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">TIMESTAMP_TZ</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Timezone preserved</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">DATETIME, TIMESTAMP</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">TIMESTAMP_NTZ</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nanosecond precision</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">NUMERIC, DECIMAL</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">DECIMAL, NUMERIC</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">NUMBER(p,s)</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Full precision</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Precision preserved</td>
                 </tr>
                 <tr>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">BOOLEAN</td>
@@ -145,19 +181,19 @@ export default function PostgreSQLToSnowflakePage() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Direct mapping</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">JSONB, JSON</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">JSON, LONGBLOB</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">VARIANT</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Full JSON support</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Native semi-structured</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">ENUM, SET</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">VARCHAR</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Converted to string</td>
                 </tr>
                 <tr>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">UUID</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">VARCHAR(36)</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Stored as string</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">ARRAY</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">ARRAY</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Native array type</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">MariaDB 10.7+ UUID type</td>
                 </tr>
               </tbody>
             </table>
@@ -171,78 +207,45 @@ export default function PostgreSQLToSnowflakePage() {
             <div className="flex items-start">
               <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 flex-shrink-0">1</div>
               <div>
-                <h3 className="font-semibold text-gray-900">Schema Discovery</h3>
-                <p className="text-gray-600">Analyze schemas, tables, views, and custom types in your PostgreSQL database.</p>
+                <h3 className="font-semibold text-gray-900">Connect & Analyze</h3>
+                <p className="text-gray-600">Securely connect to your MariaDB instance and scan all databases, tables, sequences, and relationships.</p>
               </div>
             </div>
             <div className="flex items-start">
               <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 flex-shrink-0">2</div>
               <div>
-                <h3 className="font-semibold text-gray-900">Compatibility Check</h3>
-                <p className="text-gray-600">Identify PL/pgSQL functions, triggers, and extensions that need attention.</p>
+                <h3 className="font-semibold text-gray-900">Review Compatibility</h3>
+                <p className="text-gray-600">Get a detailed report on MariaDB-specific features, stored procedures, and migration considerations.</p>
               </div>
             </div>
             <div className="flex items-start">
               <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 flex-shrink-0">3</div>
               <div>
-                <h3 className="font-semibold text-gray-900">Schema Conversion</h3>
-                <p className="text-gray-600">Generate optimized Snowflake schemas with appropriate clustering and partitioning.</p>
+                <h3 className="font-semibold text-gray-900">Generate Schema</h3>
+                <p className="text-gray-600">Automatically generate Snowflake DDL with optimized data types, clustering keys, and sequences.</p>
               </div>
             </div>
             <div className="flex items-start">
               <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 flex-shrink-0">4</div>
               <div>
-                <h3 className="font-semibold text-gray-900">Parallel Data Load</h3>
-                <p className="text-gray-600">Use COPY command with staged files for maximum throughput. Track progress in real-time.</p>
+                <h3 className="font-semibold text-gray-900">Load Data</h3>
+                <p className="text-gray-600">Stream data efficiently using staged files with parallel loading for maximum throughput.</p>
               </div>
             </div>
             <div className="flex items-start">
               <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-4 flex-shrink-0">5</div>
               <div>
-                <h3 className="font-semibold text-gray-900">Data Validation</h3>
-                <p className="text-gray-600">Compare row counts, run checksum queries, and validate sample records.</p>
+                <h3 className="font-semibold text-gray-900">Verify & Go Live</h3>
+                <p className="text-gray-600">Run automated row count and checksum validation, then switch over with confidence.</p>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Special Considerations */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">PostgreSQL-Specific Considerations</h2>
-          <div className="bg-gray-50 rounded-xl p-6">
-            <ul className="space-y-4 text-gray-600">
-              <li className="flex items-start">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                </div>
-                <span><strong>Custom Types:</strong> PostgreSQL custom types and domains are converted to their base types with documentation.</span>
-              </li>
-              <li className="flex items-start">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                </div>
-                <span><strong>Stored Procedures:</strong> PL/pgSQL functions need manual conversion to Snowflake Scripting or JavaScript UDFs.</span>
-              </li>
-              <li className="flex items-start">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                </div>
-                <span><strong>Extensions:</strong> PostGIS, pg_trgm, and other extensions require alternative approaches in Snowflake.</span>
-              </li>
-              <li className="flex items-start">
-                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                </div>
-                <span><strong>Sequences:</strong> PostgreSQL sequences are mapped to Snowflake sequences with AUTOINCREMENT columns.</span>
-              </li>
-            </ul>
           </div>
         </section>
 
         {/* CTA */}
         <section className="text-center bg-primary-600 rounded-2xl p-12">
           <h2 className="text-2xl font-bold text-white mb-4">
-            Ready to Migrate PostgreSQL to Snowflake?
+            Ready to Migrate MariaDB to Snowflake?
           </h2>
           <p className="text-primary-100 mb-8">
             Start with a free schema analysis and get a detailed migration plan.

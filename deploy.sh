@@ -39,7 +39,7 @@ deploy_frontend() {
     npm install --silent
 
     echo "[Frontend] Building..."
-    STATIC_EXPORT=true NEXT_PUBLIC_API_URL=https://legacytocloud.com/api npm run build
+    STATIC_EXPORT=true NEXT_PUBLIC_API_URL=https://www.legacytocloud.com/api npm run build
 
     echo "[Frontend] Copying to www..."
     cp -r out/* $DEPLOY_DIR/www/
@@ -72,5 +72,5 @@ echo "=========================================="
 echo "  Deploy Complete!"
 echo "=========================================="
 echo ""
-echo "Verify: curl https://legacytocloud.com/api/health"
+echo "Verify: curl https://www.legacytocloud.com/api/health"
 echo ""

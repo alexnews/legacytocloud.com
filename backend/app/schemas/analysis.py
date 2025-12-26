@@ -43,3 +43,4 @@ class QuickAnalysisResponse(BaseModel):
     tables: list = []
     risks: list = []
     error: Optional[str] = None
+    snowflake_ddl: Optional[str] = None

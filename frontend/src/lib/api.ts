@@ -122,6 +122,28 @@ export const analysis = {
       body: JSON.stringify({ connection_id: connectionId }),
     }),
 
+  upload: async (file: File, dialect?: string): Promise<AnalysisResult> => {
+    const token = getToken();
+    const formData = new FormData();
+    formData.append('file', file);
+    if (dialect) {
+      formData.append('dialect', dialect);
+    }
+
+    const response = await fetch(`${API_URL}/analysis/upload`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Upload failed' }));
+      throw new Error(error.detail || 'Upload failed');
+    }
+
+    return response.json();
+  },
+
   run: (projectId: string, connectionId: string) =>
     request<Analysis>(`/analysis/run/${projectId}`, {
       method: 'POST',
@@ -214,6 +236,7 @@ export interface AnalysisResult {
   tables: Table[];
   risks: Risk[];
   error?: string;
+  snowflake_ddl?: string;
 }
 
 export interface Table {

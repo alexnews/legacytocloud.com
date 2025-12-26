@@ -70,6 +70,9 @@ function ProjectDetailView({ projectId }: { projectId: string }) {
   const [analyzing, setAnalyzing] = useState(false);
   const [selectedConnection, setSelectedConnection] = useState('');
   const [quickAnalysisResult, setQuickAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [analysisMethod, setAnalysisMethod] = useState<'connect' | 'upload'>('connect');
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploadError, setUploadError] = useState('');
 
   useEffect(() => {
     loadData();
@@ -124,6 +127,37 @@ function ProjectDetailView({ projectId }: { projectId: string }) {
       alert('Analysis failed: ' + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setAnalyzing(false);
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (!uploadFile) {
+      setUploadError('Please select a .sql file to upload');
+      return;
+    }
+    setAnalyzing(true);
+    setQuickAnalysisResult(null);
+    setUploadError('');
+    try {
+      const result = await analysis.upload(uploadFile);
+      setQuickAnalysisResult(result);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.name.endsWith('.sql')) {
+        setUploadError('Only .sql files are supported');
+        setUploadFile(null);
+        return;
+      }
+      setUploadFile(file);
+      setUploadError('');
     }
   };
 
@@ -318,40 +352,117 @@ function ProjectDetailView({ projectId }: { projectId: string }) {
       <div className="mt-8 bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-semibold text-gray-900">Schema Analysis</h2>
-          <button
-            onClick={handleRunAnalysis}
-            disabled={analyzing || !project.source_connection_id}
-            className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 disabled:opacity-50"
-          >
-            {analyzing ? 'Analyzing...' : 'Run Full Analysis'}
-          </button>
         </div>
 
-        {/* Quick Analysis Tool */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Quick Analysis Tool</h3>
-          <div className="flex gap-3">
-            <select
-              value={selectedConnection}
-              onChange={(e) => setSelectedConnection(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-            >
-              <option value="">Select a connection to analyze</option>
-              {connectionList.map((conn) => (
-                <option key={conn.id} value={conn.id}>
-                  {conn.name} ({conn.db_type})
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={handleQuickAnalysis}
-              disabled={analyzing || !selectedConnection}
-              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50"
-            >
-              {analyzing ? 'Analyzing...' : 'Quick Analyze'}
-            </button>
+        {/* Analysis Method Tabs */}
+        <div className="mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="flex -mb-px">
+              <button
+                onClick={() => setAnalysisMethod('connect')}
+                className={`px-6 py-3 text-sm font-medium border-b-2 ${
+                  analysisMethod === 'connect'
+                    ? 'border-primary-500 text-primary-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Connect to Database
+              </button>
+              <button
+                onClick={() => setAnalysisMethod('upload')}
+                className={`px-6 py-3 text-sm font-medium border-b-2 ${
+                  analysisMethod === 'upload'
+                    ? 'border-primary-500 text-primary-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Upload Schema File
+              </button>
+            </nav>
           </div>
         </div>
+
+        {/* Connect to Database Option */}
+        {analysisMethod === 'connect' && (
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Quick Analysis Tool</h3>
+            <div className="flex gap-3">
+              <select
+                value={selectedConnection}
+                onChange={(e) => setSelectedConnection(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="">Select a connection to analyze</option>
+                {connectionList.map((conn) => (
+                  <option key={conn.id} value={conn.id}>
+                    {conn.name} ({conn.db_type})
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={handleQuickAnalysis}
+                disabled={analyzing || !selectedConnection}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50"
+              >
+                {analyzing ? 'Analyzing...' : 'Quick Analyze'}
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              Don't have a connection? <Link href="/dashboard/connections" className="text-primary-600 hover:underline">Add one here</Link>
+            </p>
+          </div>
+        )}
+
+        {/* Upload Schema File Option */}
+        {analysisMethod === 'upload' && (
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Upload Schema File</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Upload a .sql file containing CREATE TABLE statements. No database connection required.
+            </p>
+            <div className="space-y-4">
+              <div>
+                <label className="block">
+                  <span className="sr-only">Choose SQL file</span>
+                  <input
+                    type="file"
+                    accept=".sql"
+                    onChange={handleFileChange}
+                    className="block w-full text-sm text-gray-500
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-lg file:border-0
+                      file:text-sm file:font-medium
+                      file:bg-primary-50 file:text-primary-700
+                      hover:file:bg-primary-100
+                      cursor-pointer"
+                  />
+                </label>
+                {uploadFile && (
+                  <p className="mt-2 text-sm text-green-600">
+                    Selected: {uploadFile.name} ({(uploadFile.size / 1024).toFixed(1)} KB)
+                  </p>
+                )}
+                {uploadError && (
+                  <p className="mt-2 text-sm text-red-600">{uploadError}</p>
+                )}
+              </div>
+              <button
+                onClick={handleFileUpload}
+                disabled={analyzing || !uploadFile}
+                className="w-full bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 disabled:opacity-50"
+              >
+                {analyzing ? 'Analyzing...' : 'Analyze Schema File'}
+              </button>
+            </div>
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-xs text-blue-800">
+                <strong>How to export your schema:</strong><br />
+                MySQL: <code className="bg-blue-100 px-1 rounded">mysqldump --no-data mydb {'>'} schema.sql</code><br />
+                MariaDB: <code className="bg-blue-100 px-1 rounded">mysqldump --no-data mydb {'>'} schema.sql</code>
+              </p>
+            </div>
+          </div>
+        )}
 
         {quickAnalysisResult && <QuickAnalysisView result={quickAnalysisResult} />}
 
@@ -404,6 +515,26 @@ function ProjectDetailView({ projectId }: { projectId: string }) {
 
 function QuickAnalysisView({ result }: { result: AnalysisResult }) {
   const [expandedTable, setExpandedTable] = useState<string | null>(null);
+  const [showDDL, setShowDDL] = useState(false);
+
+  const handleDownloadDDL = () => {
+    if (!result.snowflake_ddl) return;
+    const blob = new Blob([result.snowflake_ddl], { type: 'text/sql' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `snowflake_schema_${result.database || 'export'}.sql`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCopyDDL = async () => {
+    if (!result.snowflake_ddl) return;
+    await navigator.clipboard.writeText(result.snowflake_ddl);
+    alert('DDL copied to clipboard!');
+  };
 
   if (!result.success) {
     return (
@@ -429,6 +560,40 @@ function QuickAnalysisView({ result }: { result: AnalysisResult }) {
           <div className="text-sm text-yellow-600">Issues Found</div>
         </div>
       </div>
+
+      {/* Snowflake DDL Section */}
+      {result.snowflake_ddl && (
+        <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
+          <div className="flex justify-between items-center mb-3">
+            <h4 className="font-medium text-cyan-900">Snowflake DDL</h4>
+            <div className="flex gap-2">
+              <button
+                onClick={handleCopyDDL}
+                className="px-3 py-1 text-sm bg-white border border-cyan-300 rounded hover:bg-cyan-100"
+              >
+                Copy
+              </button>
+              <button
+                onClick={handleDownloadDDL}
+                className="px-3 py-1 text-sm bg-cyan-600 text-white rounded hover:bg-cyan-700"
+              >
+                Download .sql
+              </button>
+              <button
+                onClick={() => setShowDDL(!showDDL)}
+                className="px-3 py-1 text-sm bg-white border border-cyan-300 rounded hover:bg-cyan-100"
+              >
+                {showDDL ? 'Hide' : 'Preview'}
+              </button>
+            </div>
+          </div>
+          {showDDL && (
+            <pre className="mt-3 p-4 bg-gray-900 text-green-400 rounded-lg overflow-x-auto text-xs max-h-96 overflow-y-auto">
+              {result.snowflake_ddl}
+            </pre>
+          )}
+        </div>
+      )}
 
       {result.risks.length > 0 && (
         <div>

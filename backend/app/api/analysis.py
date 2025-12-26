@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import datetime
+from typing import Optional
 
 from app.core.database import get_db
 from app.core.security import get_current_user
@@ -12,6 +13,8 @@ from app.schemas import (
     QuickAnalysisRequest, QuickAnalysisResponse
 )
 from app.services.schema_analyzer import SchemaAnalyzer
+from app.services.sql_parser import SQLParser
+from app.services.ddl_generator import SnowflakeDDLGenerator
 
 router = APIRouter()
 
@@ -44,6 +47,68 @@ async def list_project_analyses(
     analyses = result.scalars().all()
 
     return analyses
+
+
+@router.post("/upload", response_model=QuickAnalysisResponse)
+async def upload_schema(
+    file: UploadFile = File(...),
+    dialect: Optional[str] = Form(None),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Upload a .sql schema file and analyze it.
+    No database connection required - parses CREATE TABLE statements from file.
+
+    Supported dialects: mysql, postgres, mssql (auto-detected if not specified)
+    """
+    # Validate file type
+    if not file.filename:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No file provided"
+        )
+
+    if not file.filename.endswith('.sql'):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only .sql files are supported"
+        )
+
+    # Read file content
+    try:
+        content = await file.read()
+        sql_content = content.decode('utf-8')
+    except UnicodeDecodeError:
+        # Try latin-1 encoding
+        try:
+            sql_content = content.decode('latin-1')
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Could not decode file. Please ensure it's a valid text file."
+            )
+
+    # Validate content
+    if not sql_content.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="File is empty"
+        )
+
+    if 'CREATE TABLE' not in sql_content.upper():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No CREATE TABLE statements found in file"
+        )
+
+    # Parse the SQL
+    result = SQLParser.parse(sql_content, dialect)
+
+    # Generate Snowflake DDL if parsing was successful
+    if result.get('success') and result.get('tables'):
+        result['snowflake_ddl'] = SnowflakeDDLGenerator.generate_ddl(result)
+
+    return QuickAnalysisResponse(**result)
 
 
 @router.post("/quick", response_model=QuickAnalysisResponse)
@@ -82,6 +147,10 @@ async def quick_analysis(
         ssl=connection.ssl_enabled,
         schema=connection.schema_name or "public"
     )
+
+    # Generate Snowflake DDL if analysis was successful
+    if analysis_result.get('success') and analysis_result.get('tables'):
+        analysis_result['snowflake_ddl'] = SnowflakeDDLGenerator.generate_ddl(analysis_result)
 
     return QuickAnalysisResponse(**analysis_result)
 

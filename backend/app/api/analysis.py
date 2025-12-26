@@ -16,6 +16,36 @@ from app.services.schema_analyzer import SchemaAnalyzer
 router = APIRouter()
 
 
+@router.get("/project/{project_id}", response_model=list[AnalysisResponse])
+async def list_project_analyses(
+    project_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """List all analyses for a project."""
+    # Verify project ownership
+    result = await db.execute(
+        select(Project)
+        .where(Project.id == project_id, Project.owner_id == current_user.id)
+    )
+    project = result.scalar_one_or_none()
+
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+
+    result = await db.execute(
+        select(SchemaAnalysis)
+        .where(SchemaAnalysis.project_id == project_id)
+        .order_by(SchemaAnalysis.created_at.desc())
+    )
+    analyses = result.scalars().all()
+
+    return analyses
+
+
 @router.post("/quick", response_model=QuickAnalysisResponse)
 async def quick_analysis(
     request: QuickAnalysisRequest,
@@ -217,33 +247,3 @@ async def get_analysis_risks(
             "info": len([r for r in (analysis.risks or []) if r.get("severity") == "info"])
         }
     }
-
-
-@router.get("/project/{project_id}", response_model=list[AnalysisResponse])
-async def list_project_analyses(
-    project_id: str,
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    """List all analyses for a project."""
-    # Verify project ownership
-    result = await db.execute(
-        select(Project)
-        .where(Project.id == project_id, Project.owner_id == current_user.id)
-    )
-    project = result.scalar_one_or_none()
-
-    if not project:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Project not found"
-        )
-
-    result = await db.execute(
-        select(SchemaAnalysis)
-        .where(SchemaAnalysis.project_id == project_id)
-        .order_by(SchemaAnalysis.created_at.desc())
-    )
-    analyses = result.scalars().all()
-
-    return analyses

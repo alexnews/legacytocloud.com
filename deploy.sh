@@ -44,6 +44,14 @@ deploy_frontend() {
     echo "[Frontend] Copying to www..."
     cp -r out/* $DEPLOY_DIR/www/
 
+    echo "[Frontend] Creating .htaccess for SPA routing..."
+    cat > $DEPLOY_DIR/www/dashboard/projects/.htaccess << 'EOF'
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* index.html [L]
+EOF
+
     echo "[Frontend] Done!"
 }
 

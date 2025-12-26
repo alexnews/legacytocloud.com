@@ -184,7 +184,8 @@ class SnowflakeDDLGenerator:
                 pk_columns.append(col['name'].upper())
 
         if pk_columns:
-            pk_ddl = f'    PRIMARY KEY ("{"\", \"".join(pk_columns)}")'
+            pk_cols_str = '", "'.join(pk_columns)
+            pk_ddl = f'    PRIMARY KEY ("{pk_cols_str}")'
             column_ddls.append(pk_ddl)
 
         # Build CREATE TABLE statement

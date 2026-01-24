@@ -15,6 +15,12 @@ export const metadata: Metadata = {
     icon: '/favicon.svg',
     apple: '/favicon.svg',
   },
+  verification: {
+    google: 'IIy4H76gWeK08tjxtvPHBLCih5k6jWZ4ZzUqNNvCzBY',
+    other: {
+      'msvalidate.01': 'DBF2085FEDD8CDB457C1618B07E65EE1',
+    },
+  },
 }
 
 export default function RootLayout({

@@ -5,13 +5,13 @@ Use this to start conversations with AI coding assistants.
 ## Project
 
 **Name:** LegacyToCloud
-**Purpose:** Database migration platform - migrate legacy MySQL/PostgreSQL to cloud
+**Purpose:** Database migration platform - analyze MySQL/MariaDB/Aurora schemas and generate Snowflake DDL
 
 ## Tech Stack
 
 | Component | Technology |
 |-----------|------------|
-| **API** | FastAPI (Python 3.11) |
+| **API** | FastAPI (Python 3.10) |
 | **UI** | Next.js 14 (React) - static export |
 | **Database** | PostgreSQL (native, NOT Docker) |
 | **Web Server** | Apache with reverse proxy |
@@ -21,57 +21,119 @@ Use this to start conversations with AI coding assistants.
 
 - **OS:** Ubuntu 22.04
 - **Path:** `/usr/local/www/legacytocloud.com/`
-- **Domain:** legacytocloud.com
+- **Domain:** www.legacytocloud.com (SSL cert is for www only!)
 - **API Port:** 8003
+
+## Current Features (as of Dec 26, 2025)
+
+### SEO Landing Pages
+- `/mysql-to-snowflake`
+- `/mssql-to-snowflake`
+- `/postgresql-to-snowflake`
+- `/mariadb-to-snowflake`
+- `/aurora-to-snowflake`
+
+### Dashboard
+- User registration/login
+- Project creation (MySQL→Snowflake, etc.)
+- Database connections management
+
+### Schema Analysis (Two Methods)
+1. **Connect to Database** - Direct connection with credentials
+2. **Upload Schema File** - Upload .sql file, no credentials needed
+
+### Snowflake DDL Generator
+- Parses MySQL CREATE TABLE statements
+- Maps MySQL types to Snowflake types
+- Generates downloadable .sql file with Snowflake DDL
 
 ## Directory Structure
 
 ```
 /usr/local/www/legacytocloud.com/
-├── backend/          # FastAPI Python code
-│   ├── venv/         # Python virtual environment
-│   ├── app/          # Application code
+├── backend/
+│   ├── venv/
+│   ├── app/
+│   │   ├── api/           # FastAPI routes
+│   │   ├── services/      # Business logic
+│   │   │   ├── schema_analyzer.py   # Live DB analysis
+│   │   │   ├── sql_parser.py        # Parse .sql files
+│   │   │   └── ddl_generator.py     # Generate Snowflake DDL
+│   │   ├── models/        # SQLAlchemy models
+│   │   └── schemas/       # Pydantic schemas
 │   └── requirements.txt
-├── www/              # Static frontend (Apache serves this)
-├── .env              # Production environment variables
-└── config/
-    ├── apache/       # Apache virtual host configs
-    └── systemd/      # legacytocloud-api.service
+├── frontend/
+│   └── src/app/           # Next.js pages
+├── www/                   # Static frontend (Apache serves)
+├── config/
+│   ├── apache/
+│   └── systemd/
+├── steps/                 # Session logs & plans
+├── deploy.sh              # Deployment script
+└── .env
 ```
 
-## Local Development (Mac)
+## Key Files
 
-- Docker is ONLY for local PostgreSQL database
-- Frontend runs with `npm run dev`
-- Backend runs with `uvicorn app.main:app --port 8003`
+| File | Purpose |
+|------|---------|
+| `backend/app/services/sql_parser.py` | Parse MySQL CREATE TABLE from .sql files |
+| `backend/app/services/ddl_generator.py` | Generate Snowflake DDL |
+| `backend/app/api/analysis.py` | Analysis endpoints (upload, quick, run) |
+| `frontend/src/app/dashboard/projects/[[...slug]]/client.tsx` | Project detail page with upload UI |
+| `deploy.sh` | Deploy script with options |
 
-## Production Deployment
+## Deploy Commands
 
-- NO Docker on production server
-- Frontend: `npm run build` with `STATIC_EXPORT=true`, copy `out/` to `www/`
-- Backend: systemd service `legacytocloud-api`
-- CI/CD: GitHub Actions on push to master
-
-## Key Commands
-
-**Build frontend for production:**
 ```bash
-cd frontend
-STATIC_EXPORT=true NEXT_PUBLIC_API_URL=https://legacytocloud.com/api npm run build
+cd /usr/local/www/legacytocloud.com
+git pull
+./deploy.sh              # Both backend & frontend
+./deploy.sh frontend     # Frontend only
+./deploy.sh backend      # Backend only
+
+# Verify
+curl https://www.legacytocloud.com/api/health
 ```
 
-**Restart backend on server:**
+## Known Issues & Fixes
+
+### Apache SPA Routing
+Dashboard project pages need .htaccess for client-side routing:
 ```bash
-sudo systemctl restart legacytocloud-api
+# This is auto-created by deploy.sh now
+cat /usr/local/www/legacytocloud.com/www/dashboard/projects/.htaccess
 ```
 
-**Check backend logs:**
+### SSL Certificate
+Certificate is for `www.legacytocloud.com` only. Always use `www.` in URLs:
 ```bash
-sudo journalctl -u legacytocloud-api -f
+# Correct
+NEXT_PUBLIC_API_URL=https://www.legacytocloud.com/api
+
+# Wrong - will cause SSL errors
+NEXT_PUBLIC_API_URL=https://legacytocloud.com/api
 ```
 
-## Important Notes
+### Python 3.10 Compatibility
+Server runs Python 3.10. Avoid backslashes in f-string expressions:
+```python
+# Bad - syntax error in Python 3.10
+f'"{"\", \"".join(items)}"'
 
-- Production uses native PostgreSQL, NOT Docker
-- Frontend exports to static HTML (no Node.js server in production)
-- Apache proxies `/api/*` requests to FastAPI on port 8003
+# Good
+items_str = '", "'.join(items)
+f'"{items_str}"'
+```
+
+## Session Logs
+
+- `steps/SESSION_2025-12-22.md` - Initial deploy, fixed alembic
+- `steps/SESSION_2025-12-26.md` - SEO pages, schema upload, DDL generator
+
+## Next Steps (TODO)
+
+1. Test schema upload with real MySQL schema files
+2. Add PostgreSQL and MSSQL parsers to sql_parser.py
+3. Add stored procedure/view analysis
+4. Add data migration planning (not just schema)

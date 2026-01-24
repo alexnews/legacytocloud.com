@@ -24,7 +24,7 @@ Use this to start conversations with AI coding assistants.
 - **Domain:** www.legacytocloud.com (SSL cert is for www only!)
 - **API Port:** 8003
 
-## Current Features (as of Dec 26, 2025)
+## Current Features (as of Jan 23, 2026)
 
 ### SEO Landing Pages
 - `/mysql-to-snowflake`
@@ -32,6 +32,11 @@ Use this to start conversations with AI coding assistants.
 - `/postgresql-to-snowflake`
 - `/mariadb-to-snowflake`
 - `/aurora-to-snowflake`
+
+### Resource Pages (SEO)
+- `/glossary` - 20 database migration terms
+- `/faq` - 15 questions with FAQPage schema markup
+- `/tips` - 8 migration best practices with code examples
 
 ### Dashboard
 - User registration/login
@@ -46,6 +51,15 @@ Use this to start conversations with AI coding assistants.
 - Parses MySQL CREATE TABLE statements
 - Maps MySQL types to Snowflake types
 - Generates downloadable .sql file with Snowflake DDL
+
+### SEO Setup
+- Google Search Console verified
+- Bing Webmaster verified
+- Google Analytics (G-FE8Y20HQ04)
+- OpenGraph & Twitter card metadata
+- FAQPage structured data (JSON-LD)
+- sitemap.xml with 17 pages
+- robots.txt configured
 
 ## Directory Structure
 
@@ -81,6 +95,12 @@ Use this to start conversations with AI coding assistants.
 | `backend/app/services/ddl_generator.py` | Generate Snowflake DDL |
 | `backend/app/api/analysis.py` | Analysis endpoints (upload, quick, run) |
 | `frontend/src/app/dashboard/projects/[[...slug]]/client.tsx` | Project detail page with upload UI |
+| `frontend/src/app/layout.tsx` | Global metadata, Analytics, verification |
+| `frontend/src/app/glossary/page.tsx` | SEO glossary page |
+| `frontend/src/app/faq/page.tsx` | FAQ with JSON-LD schema |
+| `frontend/src/app/tips/page.tsx` | Migration tips/best practices |
+| `frontend/public/sitemap.xml` | Sitemap for search engines |
+| `frontend/public/robots.txt` | Crawler rules |
 | `deploy.sh` | Deploy script with options |
 
 ## Deploy Commands
@@ -130,6 +150,7 @@ f'"{items_str}"'
 
 - `steps/SESSION_2025-12-22.md` - Initial deploy, fixed alembic
 - `steps/SESSION_2025-12-26.md` - SEO pages, schema upload, DDL generator
+- `steps/SESSION_2026-01-23.md` - Glossary, FAQ, Tips pages, SEO improvements
 
 ## Next Steps (TODO)
 
@@ -137,3 +158,5 @@ f'"{items_str}"'
 2. Add PostgreSQL and MSSQL parsers to sql_parser.py
 3. Add stored procedure/view analysis
 4. Add data migration planning (not just schema)
+5. Create og-image.png (1200x630) for social sharing
+6. Add blog section for SEO content

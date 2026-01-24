@@ -9,12 +9,49 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'LegacyToCloud - Database Migration Made Simple',
+  metadataBase: new URL('https://www.legacytocloud.com'),
+  title: {
+    default: 'LegacyToCloud - Database Migration Made Simple',
+    template: '%s | LegacyToCloud',
+  },
   description: 'Migrate legacy MSSQL, MySQL and PostgreSQL databases to Snowflake cloud platform safely and predictably.',
   keywords: 'database migration, MSSQL to Snowflake, MySQL to Snowflake, PostgreSQL to Snowflake, legacy database, cloud migration',
   icons: {
     icon: '/favicon.svg',
     apple: '/favicon.svg',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://www.legacytocloud.com',
+    siteName: 'LegacyToCloud',
+    title: 'LegacyToCloud - Database Migration Made Simple',
+    description: 'Migrate legacy MSSQL, MySQL and PostgreSQL databases to Snowflake cloud platform safely and predictably.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'LegacyToCloud - Database Migration Platform',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LegacyToCloud - Database Migration Made Simple',
+    description: 'Migrate legacy MSSQL, MySQL and PostgreSQL databases to Snowflake cloud platform safely and predictably.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   verification: {
     google: 'IIy4H76gWeK08tjxtvPHBLCih5k6jWZ4ZzUqNNvCzBY',

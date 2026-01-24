@@ -1,10 +1,16 @@
-# https://www.robotstxt.org/robotstxt.html
+# LegacyToCloud
+# https://www.legacytocloud.com
+
 User-agent: *
 Allow: /
 
 # Disallow admin/dashboard areas from indexing
 Disallow: /dashboard/
 Disallow: /api/
+Disallow: /_next/
 
 # Sitemap
-Sitemap: https://legacytocloud.com/sitemap.xml
+Sitemap: https://www.legacytocloud.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1

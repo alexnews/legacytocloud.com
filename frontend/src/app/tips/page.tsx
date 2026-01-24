@@ -220,7 +220,7 @@ WHERE updated_at > '2025-01-01 00:00:00';
   },
 ];
 
-const categories = [...new Set(tips.map(t => t.category))];
+const categories = Array.from(new Set(tips.map(t => t.category)));
 
 export default function TipsPage() {
   return (

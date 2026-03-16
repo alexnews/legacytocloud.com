@@ -8,11 +8,17 @@ Designed to be called from cron. Exits 0 on success, 1 on failure.
 
 import asyncio
 import logging
+import os
 import sys
 from pathlib import Path
 
 # Ensure backend is on the path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+backend_dir = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(backend_dir))
+
+# Load .env from project root so DATABASE_URL etc. are available
+from dotenv import load_dotenv
+load_dotenv(backend_dir.parent / ".env")
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)

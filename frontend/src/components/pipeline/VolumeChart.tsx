@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import {
   Chart as ChartJS,
+  BarController,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -17,6 +18,7 @@ import { Chart } from 'react-chartjs-2';
 import type { VolumeAnalysis, StockOHLCV, Symbol } from '@/types/pipeline';
 
 ChartJS.register(
+  BarController,
   CategoryScale,
   LinearScale,
   BarElement,

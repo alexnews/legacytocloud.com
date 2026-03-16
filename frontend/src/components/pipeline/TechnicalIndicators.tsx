@@ -3,6 +3,8 @@
 import { useMemo } from 'react';
 import {
   Chart as ChartJS,
+  BarController,
+  LineController,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -18,6 +20,8 @@ import { Chart, Line } from 'react-chartjs-2';
 import type { MovingAverages, Symbol } from '@/types/pipeline';
 
 ChartJS.register(
+  BarController,
+  LineController,
   CategoryScale,
   LinearScale,
   PointElement,

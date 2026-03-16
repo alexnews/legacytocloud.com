@@ -111,12 +111,20 @@ export default function DashboardPage() {
             <h1 className="text-xl font-bold text-white">Finance Analytics</h1>
             <p className="text-xs text-slate-400">Real-time stock data pipeline dashboard</p>
           </div>
-          <a
-            href="/demo/architecture"
-            className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-medium text-slate-300 transition-colors hover:border-slate-600 hover:text-white"
-          >
-            View Architecture
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href="/demo/architecture"
+              className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-medium text-slate-300 transition-colors hover:border-slate-600 hover:text-white"
+            >
+              View Architecture
+            </a>
+            <a
+              href="/"
+              className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-medium text-slate-300 transition-colors hover:border-slate-600 hover:text-white"
+            >
+              Home
+            </a>
+          </div>
         </div>
       </header>
 

@@ -32,6 +32,15 @@ class Settings(BaseSettings):
     clickhouse_port: int = 9000
     clickhouse_database: str = "pipeline"
 
+    # News / Coollinks MySQL
+    coollinks_mysql_host: str = "localhost"
+    coollinks_mysql_port: int = 3306
+    coollinks_mysql_user: str = ""
+    coollinks_mysql_password: str = ""
+    coollinks_mysql_db: str = "coollinks"
+    news_image_dir: str = "/usr/local/www/legacytocloud.com/www/uploads/news"
+    news_site_slug: str = "legacytocloud.com"
+
     class Config:
         env_file = ".env"
         extra = "ignore"

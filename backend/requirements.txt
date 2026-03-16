@@ -28,6 +28,7 @@ pymssql==2.2.11
 # Utilities
 python-dotenv==1.0.0
 httpx==0.26.0
+Pillow==11.1.0
 
 # Pipeline
 clickhouse-driver==0.2.9

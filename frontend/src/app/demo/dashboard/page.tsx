@@ -113,6 +113,12 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <a
+              href="/news"
+              className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-medium text-slate-300 transition-colors hover:border-slate-600 hover:text-white"
+            >
+              News
+            </a>
+            <a
               href="/demo/architecture"
               className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-medium text-slate-300 transition-colors hover:border-slate-600 hover:text-white"
             >

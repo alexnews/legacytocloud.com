@@ -117,6 +117,9 @@ export default function SiteHeader() {
             )}
           </div>
 
+          <Link href="/news" className={linkClass('/news')}>
+            News
+          </Link>
           <Link href="/services" className={linkClass('/services')}>
             Services
           </Link>
@@ -195,6 +198,14 @@ export default function SiteHeader() {
               </div>
             )}
 
+            <Link
+              href="/news"
+              className={`block px-3 py-2.5 rounded-lg text-sm font-medium ${
+                isActive('/news') ? 'text-blue-400 bg-slate-800' : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              News
+            </Link>
             <Link
               href="/services"
               className={`block px-3 py-2.5 rounded-lg text-sm font-medium ${

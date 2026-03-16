@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import type { Article } from '@/types/news';
 import { getArticle } from '@/lib/news-api';
@@ -59,8 +58,10 @@ function ArticleSkeleton() {
 }
 
 export default function ArticlePage() {
-  const params = useParams();
-  const slug = params.slug as string;
+  // Extract slug from actual URL path, not from Next.js params
+  // (Apache rewrites /news/any-slug to /news/_/index.html)
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+  const slug = pathname.replace(/^\/news\//, '').replace(/\/$/, '') || null;
 
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);

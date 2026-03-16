@@ -4,6 +4,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import type { Article } from '@/types/news';
+import { getArticles } from '@/lib/news-api';
 
 /* ------------------------------------------------------------------ */
 /*  Sparkline Animation - SVG mini chart for hero section             */
@@ -171,6 +173,14 @@ function MigrationCard({
 /*  HOMEPAGE                                                          */
 /* ================================================================== */
 export default function Home() {
+  const [latestNews, setLatestNews] = useState<Article[]>([]);
+
+  useEffect(() => {
+    getArticles(1, 3)
+      .then((res) => setLatestNews(res.items))
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       <SiteHeader />
@@ -457,6 +467,67 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ============================================================ */}
+      {/*  LATEST NEWS                                                 */}
+      {/* ============================================================ */}
+      {latestNews.length > 0 && (
+        <section className="py-20 border-t border-slate-800 bg-slate-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-center text-2xl sm:text-3xl font-bold mb-4">
+              Industry News
+            </h2>
+            <p className="text-center text-slate-400 mb-12 max-w-lg mx-auto">
+              Latest in cloud infrastructure, data engineering, and AI
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {latestNews.map((article) => (
+                <Link
+                  key={article.id}
+                  href={`/news/${article.slug}`}
+                  className="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden hover:border-slate-500 transition-all group"
+                >
+                  {article.image_url && (
+                    <div className="h-40 overflow-hidden">
+                      <img
+                        src={article.image_url}
+                        alt=""
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+                  <div className="p-5">
+                    {article.source && (
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 mb-2 block">
+                        {article.source}
+                      </span>
+                    )}
+                    <h3 className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors leading-snug line-clamp-2">
+                      {article.title}
+                    </h3>
+                    {article.summary && (
+                      <p className="text-xs text-slate-400 mt-2 line-clamp-2">{article.summary}</p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="text-center mt-10">
+              <Link
+                href="/news"
+                className="inline-flex items-center gap-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                View all news
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ============================================================ */}
       {/*  ABOUT / CTA                                                 */}

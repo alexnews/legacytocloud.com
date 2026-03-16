@@ -43,6 +43,7 @@ class PipelineRun(Base):
     """Audit log for every pipeline execution."""
 
     __tablename__ = "pipeline_runs"
+    __table_args__ = {"schema": "pipeline"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     run_type = Column(String(50), nullable=False)  # ingest | transform
@@ -58,6 +59,7 @@ class PipelineMetric(Base):
     """Key-value store for pipeline operational metrics."""
 
     __tablename__ = "pipeline_metrics"
+    __table_args__ = {"schema": "pipeline"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     key = Column(String(100), nullable=False, unique=True)

@@ -16,8 +16,10 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # Create pipeline schema
+    # Create pipeline schema and grant access
     op.execute("CREATE SCHEMA IF NOT EXISTS pipeline")
+    op.execute("GRANT ALL ON SCHEMA pipeline TO ltc_user")
+    op.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA pipeline GRANT ALL ON TABLES TO ltc_user")
 
     # Raw stock prices (pipeline schema)
     op.create_table(
@@ -54,7 +56,7 @@ def upgrade() -> None:
         schema="pipeline",
     )
 
-    # Pipeline runs (public schema)
+    # Pipeline runs (pipeline schema)
     op.create_table(
         "pipeline_runs",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
@@ -71,9 +73,10 @@ def upgrade() -> None:
         sa.Column("completed_at", sa.DateTime(), nullable=True),
         sa.Column("error_message", sa.Text(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
+        schema="pipeline",
     )
 
-    # Pipeline metrics (public schema)
+    # Pipeline metrics (pipeline schema)
     op.create_table(
         "pipeline_metrics",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
@@ -86,12 +89,13 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("id"),
+        schema="pipeline",
     )
 
 
 def downgrade() -> None:
-    op.drop_table("pipeline_metrics")
-    op.drop_table("pipeline_runs")
+    op.drop_table("pipeline_metrics", schema="pipeline")
+    op.drop_table("pipeline_runs", schema="pipeline")
     op.drop_index("ix_raw_stock_prices_trade_date", table_name="raw_stock_prices", schema="pipeline")
     op.drop_index("ix_raw_stock_prices_symbol", table_name="raw_stock_prices", schema="pipeline")
     op.drop_table("raw_stock_prices", schema="pipeline")

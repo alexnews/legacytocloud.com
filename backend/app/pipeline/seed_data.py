@@ -89,15 +89,74 @@ def generate_seed_data(
 # Postgres seeding
 # ------------------------------------------------------------------
 
+async def _fetch_real_data(symbols: list[str], api_key: str) -> list[dict]:
+    """Fetch real stock data from Alpha Vantage for all symbols."""
+    import httpx
+
+    all_rows: list[dict] = []
+    base = "https://www.alphavantage.co/query"
+
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        for symbol in symbols:
+            logger.info("Fetching real data for %s from Alpha Vantage...", symbol)
+            resp = await client.get(base, params={
+                "function": "TIME_SERIES_DAILY",
+                "symbol": symbol,
+                "outputsize": "full",
+                "apikey": api_key,
+            })
+            resp.raise_for_status()
+            data = resp.json()
+
+            time_series = data.get("Time Series (Daily)", {})
+            if not time_series:
+                logger.warning("No data returned for %s: %s", symbol, data.get("Note", data.get("Information", "")))
+                continue
+
+            for date_str, values in time_series.items():
+                all_rows.append({
+                    "symbol": symbol,
+                    "trade_date": date.fromisoformat(date_str),
+                    "open": float(values["1. open"]),
+                    "high": float(values["2. high"]),
+                    "low": float(values["3. low"]),
+                    "close": float(values["4. close"]),
+                    "volume": int(values["5. volume"]),
+                })
+
+            logger.info("Got %d days for %s", len(time_series), symbol)
+
+    return all_rows
+
+
 async def seed_postgres(db: AsyncSession) -> None:
-    """Insert synthetic seed data into PostgreSQL if the table is empty."""
+    """Insert stock data into PostgreSQL if the table is empty.
+
+    Uses real Alpha Vantage data if API key is set, otherwise synthetic.
+    """
+    from app.core.config import get_settings
+
     count = await db.scalar(select(func.count()).select_from(RawStockPrice))
     if count and count > 0:
         logger.info("PostgreSQL already has %d rows -- skipping seed.", count)
         return
 
-    logger.info("Seeding PostgreSQL with synthetic stock data...")
-    rows = generate_seed_data()
+    settings = get_settings()
+    api_key = settings.alpha_vantage_api_key
+
+    if api_key:
+        logger.info("Alpha Vantage API key found -- fetching real data...")
+        try:
+            rows = await _fetch_real_data(settings.pipeline_symbols, api_key)
+            source = "alpha_vantage"
+        except Exception as exc:
+            logger.warning("Real data fetch failed (%s), falling back to synthetic.", exc)
+            rows = generate_seed_data()
+            source = "seed"
+    else:
+        logger.info("No API key -- seeding with synthetic data...")
+        rows = generate_seed_data()
+        source = "seed"
 
     for row in rows:
         stmt = (
@@ -110,14 +169,14 @@ async def seed_postgres(db: AsyncSession) -> None:
                 low=row["low"],
                 close=row["close"],
                 volume=row["volume"],
-                source="seed",
+                source=source,
             )
             .on_conflict_do_nothing(constraint="uq_raw_stock_symbol_date")
         )
         await db.execute(stmt)
 
     await db.commit()
-    logger.info("Seeded %d rows into PostgreSQL.", len(rows))
+    logger.info("Seeded %d rows (%s) into PostgreSQL.", len(rows), source)
 
 
 # ------------------------------------------------------------------

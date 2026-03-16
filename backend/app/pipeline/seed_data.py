@@ -203,11 +203,15 @@ def _compute_rsi(series: pd.Series, period: int = 14) -> pd.Series:
     return rsi.fillna(50.0)
 
 
-def seed_clickhouse() -> None:
-    """Transform seed data and insert into all three ClickHouse tables."""
+def seed_clickhouse(pg_rows: list[dict] | None = None) -> None:
+    """Transform data and insert into all three ClickHouse tables.
+
+    Uses pg_rows if provided (real data from PostgreSQL), otherwise falls
+    back to generate_seed_data().
+    """
     logger.info("Seeding ClickHouse with computed analytics data...")
 
-    rows = generate_seed_data()
+    rows = pg_rows if pg_rows else generate_seed_data()
     df = pd.DataFrame(rows)
     df = df.sort_values(["symbol", "trade_date"]).reset_index(drop=True)
 

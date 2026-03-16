@@ -56,9 +56,26 @@ async def startup_seed():
         async with async_session() as db:
             await seed_postgres(db)
 
-        # Seed ClickHouse
+        # Seed ClickHouse from whatever is in PostgreSQL
         try:
-            seed_clickhouse()
+            from sqlalchemy import select
+            from app.pipeline.models import RawStockPrice
+
+            async with async_session() as db:
+                result = await db.execute(select(RawStockPrice))
+                rows = [
+                    {
+                        "symbol": r.symbol,
+                        "trade_date": r.trade_date,
+                        "open": r.open,
+                        "high": r.high,
+                        "low": r.low,
+                        "close": r.close,
+                        "volume": r.volume,
+                    }
+                    for r in result.scalars().all()
+                ]
+            seed_clickhouse(rows if rows else None)
         except Exception as exc:
             logger.warning("ClickHouse seeding skipped: %s", exc)
 

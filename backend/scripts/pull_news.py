@@ -158,7 +158,7 @@ def get_mysql_connection() -> pymysql.Connection:
 def fetch_ready_articles(mysql_conn: pymysql.Connection, site_slug: str, limit: int | None = None) -> list[dict]:
     """Fetch articles from coollinks that are ready to be pulled."""
     sql = """
-        SELECT id, title, body, url, source, image_url, quality_score, created_at
+        SELECT id, title, content, original_url, source, image_url, quality_score, created_at
         FROM pipeline_articles
         WHERE site = %s AND status = 'ready' AND pulled_at IS NULL
         ORDER BY created_at DESC
@@ -192,9 +192,9 @@ async def insert_articles(articles: list[dict], image_dir: str) -> list[dict]:
         for art in articles:
             title = art["title"]
             slug = slugify(title)
-            summary = make_summary(art.get("body"))
-            content = art.get("body")
-            original_url = art.get("url")
+            summary = make_summary(art.get("content"))
+            content = art.get("content")
+            original_url = art.get("original_url")
             source = art.get("source")
             quality_score = art.get("quality_score")
             published_at = art.get("created_at")

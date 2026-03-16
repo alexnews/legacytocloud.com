@@ -11,11 +11,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.legacytocloud.com'),
   title: {
-    default: 'LegacyToCloud - Database Migration Made Simple',
+    default: 'LegacyToCloud - Real-Time Finance Analytics Pipeline',
     template: '%s | LegacyToCloud',
   },
-  description: 'Migrate legacy MSSQL, MySQL and PostgreSQL databases to Snowflake cloud platform safely and predictably.',
-  keywords: 'database migration, MSSQL to Snowflake, MySQL to Snowflake, PostgreSQL to Snowflake, legacy database, cloud migration',
+  description: 'Data engineering portfolio: real-time finance analytics pipeline with Alpha Vantage, Python, PostgreSQL, ClickHouse, FastAPI, and Next.js. Includes database migration tooling for Snowflake.',
+  keywords: 'data engineering, finance analytics, stock analytics, pipeline, ClickHouse, FastAPI, PostgreSQL, Next.js, database migration, MSSQL to Snowflake, MySQL to Snowflake, PostgreSQL to Snowflake, real-time analytics',
   icons: {
     icon: '/favicon.svg',
     apple: '/favicon.svg',
@@ -25,21 +25,21 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://www.legacytocloud.com',
     siteName: 'LegacyToCloud',
-    title: 'LegacyToCloud - Database Migration Made Simple',
-    description: 'Migrate legacy MSSQL, MySQL and PostgreSQL databases to Snowflake cloud platform safely and predictably.',
+    title: 'LegacyToCloud - Real-Time Finance Analytics Pipeline',
+    description: 'Production-grade data engineering portfolio showcasing a real-time finance analytics pipeline with Python, PostgreSQL, ClickHouse, FastAPI, and Next.js.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'LegacyToCloud - Database Migration Platform',
+        alt: 'LegacyToCloud - Finance Analytics Pipeline',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'LegacyToCloud - Database Migration Made Simple',
-    description: 'Migrate legacy MSSQL, MySQL and PostgreSQL databases to Snowflake cloud platform safely and predictably.',
+    title: 'LegacyToCloud - Real-Time Finance Analytics Pipeline',
+    description: 'Production-grade data engineering portfolio showcasing a real-time finance analytics pipeline with Python, PostgreSQL, ClickHouse, FastAPI, and Next.js.',
     images: ['/og-image.png'],
   },
   robots: {

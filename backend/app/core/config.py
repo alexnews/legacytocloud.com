@@ -25,6 +25,13 @@ class Settings(BaseSettings):
         "https://www.legacytocloud.com"
     ]
 
+    # Pipeline
+    alpha_vantage_api_key: str = ""
+    pipeline_symbols: list[str] = ["AAPL", "MSFT", "JPM", "GS"]
+    clickhouse_host: str = "localhost"
+    clickhouse_port: int = 9000
+    clickhouse_database: str = "pipeline"
+
     class Config:
         env_file = ".env"
         extra = "ignore"

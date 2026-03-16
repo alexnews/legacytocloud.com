@@ -91,18 +91,22 @@ def generate_seed_data(
 
 async def _fetch_real_data(symbols: list[str], api_key: str) -> list[dict]:
     """Fetch real stock data from Alpha Vantage for all symbols."""
+    import asyncio
     import httpx
 
     all_rows: list[dict] = []
     base = "https://www.alphavantage.co/query"
 
     async with httpx.AsyncClient(timeout=30.0) as client:
-        for symbol in symbols:
+        for i, symbol in enumerate(symbols):
+            if i > 0:
+                await asyncio.sleep(2)  # free tier: 1 req/sec, wait 2s to be safe
+
             logger.info("Fetching real data for %s from Alpha Vantage...", symbol)
             resp = await client.get(base, params={
                 "function": "TIME_SERIES_DAILY",
                 "symbol": symbol,
-                "outputsize": "full",
+                "outputsize": "compact",
                 "apikey": api_key,
             })
             resp.raise_for_status()

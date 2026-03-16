@@ -3,6 +3,7 @@ export interface Article {
   title: string;
   slug: string;
   content: string;
+  content_html: string;
   summary: string;
   original_url: string;
   source: string;

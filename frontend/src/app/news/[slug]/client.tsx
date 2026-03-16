@@ -169,7 +169,7 @@ export default function ArticlePage() {
                 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-1
                 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-1
                 [&_li]:text-slate-300"
-              dangerouslySetInnerHTML={{ __html: article.content }}
+              dangerouslySetInnerHTML={{ __html: article.content_html || article.content }}
             />
 
             {/* Original source link */}
@@ -181,7 +181,7 @@ export default function ArticlePage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
                 >
-                  Read original article
+                  Read more at {article.source || 'source'}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>

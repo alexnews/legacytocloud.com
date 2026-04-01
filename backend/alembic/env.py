@@ -14,6 +14,7 @@ load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path
 from app.core.database import Base
 from app.models import User, Project, Connection, SchemaAnalysis
 from app.pipeline.models import RawStockPrice, PipelineRun, PipelineMetric
+from app.rag.models import ArticleEmbedding
 
 config = context.config
 

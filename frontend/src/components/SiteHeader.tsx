@@ -120,6 +120,9 @@ export default function SiteHeader() {
           <Link href="/news" className={linkClass('/news')}>
             News
           </Link>
+          <Link href="/chat" className={linkClass('/chat')}>
+            Chat
+          </Link>
           <Link href="/services" className={linkClass('/services')}>
             Services
           </Link>
@@ -205,6 +208,14 @@ export default function SiteHeader() {
               }`}
             >
               News
+            </Link>
+            <Link
+              href="/chat"
+              className={`block px-3 py-2.5 rounded-lg text-sm font-medium ${
+                isActive('/chat') ? 'text-blue-400 bg-slate-800' : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Chat
             </Link>
             <Link
               href="/services"

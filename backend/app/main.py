@@ -7,6 +7,7 @@ from app.core.config import get_settings
 from app.api import health, auth, projects, connections, analysis
 from app.pipeline.router import router as pipeline_router
 from app.pipeline.news_router import router as news_router
+from app.rag.chat_router import router as chat_router
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,7 @@ app.include_router(connections.router, prefix="/api/connections", tags=["Connect
 app.include_router(analysis.router, prefix="/api/analysis", tags=["Schema Analysis"])
 app.include_router(pipeline_router, prefix="/api/pipeline", tags=["Pipeline"])
 app.include_router(news_router, prefix="/api", tags=["News"])
+app.include_router(chat_router, prefix="/api", tags=["Chat"])
 
 
 @app.on_event("startup")

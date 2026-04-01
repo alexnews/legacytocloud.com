@@ -32,6 +32,11 @@ class Settings(BaseSettings):
     clickhouse_port: int = 9000
     clickhouse_database: str = "pipeline"
 
+    # RAG / Chat
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_model: str = "mistral"
+    embedding_model: str = "all-MiniLM-L6-v2"
+
     # News / Coollinks MySQL
     coollinks_mysql_host: str = "localhost"
     coollinks_mysql_port: int = 3306

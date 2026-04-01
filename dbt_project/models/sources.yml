@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: pipeline
+    description: "Raw data loaded by Python scripts (Alpha Vantage, Coollinks)"
+    schema: pipeline
+    tables:
+      - name: raw_stock_prices
+        description: "Daily OHLCV stock prices from Alpha Vantage API"
+        columns:
+          - name: id
+            tests: [unique, not_null]
+          - name: symbol
+            tests: [not_null]
+          - name: trade_date
+            tests: [not_null]
+          - name: close
+            tests: [not_null]
+          - name: volume
+            tests: [not_null]
+
+      - name: articles
+        description: "News articles pulled from Coollinks MySQL"
+        columns:
+          - name: id
+            tests: [unique, not_null]
+          - name: title
+            tests: [not_null]
+          - name: slug
+            tests: [unique, not_null]
+
+      - name: pipeline_runs
+        description: "Audit log of pipeline executions"

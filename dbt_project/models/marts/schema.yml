@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: fct_daily_stock_returns
+    description: "Daily stock prices with returns, moving averages, and volume analysis"
+    columns:
+      - name: symbol
+        tests: [not_null]
+      - name: trade_date
+        tests: [not_null]
+
+  - name: fct_articles_by_source
+    description: "Article count and quality metrics grouped by news source"
+    columns:
+      - name: source
+        tests: [unique, not_null]
+
+  - name: fct_weekly_news_summary
+    description: "Weekly aggregation of published articles"
+    columns:
+      - name: week_start
+        tests: [unique, not_null]
+
+  - name: dim_stock_symbols
+    description: "One row per stock symbol with summary statistics"
+    columns:
+      - name: symbol
+        tests: [unique, not_null]

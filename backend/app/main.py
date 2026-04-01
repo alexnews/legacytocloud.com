@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
-from app.api import health, auth, projects, connections, analysis
+from app.api import health, auth, projects, connections, analysis, analytics
 from app.pipeline.router import router as pipeline_router
 from app.pipeline.news_router import router as news_router
 from app.rag.chat_router import router as chat_router
@@ -40,6 +40,7 @@ app.include_router(analysis.router, prefix="/api/analysis", tags=["Schema Analys
 app.include_router(pipeline_router, prefix="/api/pipeline", tags=["Pipeline"])
 app.include_router(news_router, prefix="/api", tags=["News"])
 app.include_router(chat_router, prefix="/api", tags=["Chat"])
+app.include_router(analytics.router, prefix="/api", tags=["Analytics"])
 
 
 @app.on_event("startup")

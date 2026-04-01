@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_stock_prices
+    description: "Cleaned stock prices with renamed columns"
+    columns:
+      - name: id
+        tests: [unique, not_null]
+      - name: symbol
+        tests: [not_null]
+      - name: close_price
+        tests: [not_null]
+
+  - name: stg_articles
+    description: "Published articles with word count and reading time"
+    columns:
+      - name: id
+        tests: [unique, not_null]
+      - name: slug
+        tests: [unique, not_null]
+      - name: title
+        tests: [not_null]

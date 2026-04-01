@@ -1,0 +1,17 @@
+# Copy this to ~/.dbt/profiles.yml and fill in your password
+#
+# Option 1: Direct connection (if PostgreSQL allows remote access)
+# Option 2: SSH tunnel first: ssh -L 5432:localhost:5432 dundee@white
+
+legacytocloud:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost          # localhost if using SSH tunnel
+      port: 5432
+      user: ltc_user
+      password: YOUR_PASSWORD
+      dbname: legacytocloud
+      schema: pipeline
+      threads: 4

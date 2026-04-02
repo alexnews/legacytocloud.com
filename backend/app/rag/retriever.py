@@ -21,11 +21,11 @@ async def find_similar_articles(
         text("""
             SELECT
                 a.id, a.title, a.slug, a.content, a.source, a.summary,
-                1 - (e.embedding <=> :vec::vector) AS similarity
+                1 - (e.embedding <=> CAST(:vec AS vector)) AS similarity
             FROM pipeline.articles a
             JOIN pipeline.article_embeddings e ON a.id = e.article_id
             WHERE a.status = 'published'
-            ORDER BY e.embedding <=> :vec::vector
+            ORDER BY e.embedding <=> CAST(:vec AS vector)
             LIMIT :k
         """),
         {"vec": vec_str, "k": top_k},

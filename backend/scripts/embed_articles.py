@@ -85,7 +85,7 @@ async def main(dry_run: bool = False, reembed: bool = False) -> int:
             await db.execute(
                 text("""
                     INSERT INTO pipeline.article_embeddings (article_id, embedding, model_name)
-                    VALUES (:article_id, :embedding::vector, 'all-MiniLM-L6-v2')
+                    VALUES (:article_id, CAST(:embedding AS vector), 'all-MiniLM-L6-v2')
                     ON CONFLICT (article_id) DO UPDATE
                     SET embedding = EXCLUDED.embedding, created_at = NOW()
                 """),

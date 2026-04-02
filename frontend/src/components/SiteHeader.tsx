@@ -117,6 +117,9 @@ export default function SiteHeader() {
             )}
           </div>
 
+          <Link href="/convert" className={linkClass('/convert')}>
+            Convert
+          </Link>
           <Link href="/news" className={linkClass('/news')}>
             News
           </Link>
@@ -204,6 +207,14 @@ export default function SiteHeader() {
               </div>
             )}
 
+            <Link
+              href="/convert"
+              className={`block px-3 py-2.5 rounded-lg text-sm font-medium ${
+                isActive('/convert') ? 'text-blue-400 bg-slate-800' : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Convert
+            </Link>
             <Link
               href="/news"
               className={`block px-3 py-2.5 rounded-lg text-sm font-medium ${

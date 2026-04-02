@@ -8,6 +8,7 @@ from app.api import health, auth, projects, connections, analysis, analytics
 from app.pipeline.router import router as pipeline_router
 from app.pipeline.news_router import router as news_router
 from app.rag.chat_router import router as chat_router
+from app.converter.router import router as converter_router
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,7 @@ app.include_router(pipeline_router, prefix="/api/pipeline", tags=["Pipeline"])
 app.include_router(news_router, prefix="/api", tags=["News"])
 app.include_router(chat_router, prefix="/api", tags=["Chat"])
 app.include_router(analytics.router, prefix="/api", tags=["Analytics"])
+app.include_router(converter_router, prefix="/api", tags=["Converter"])
 
 
 @app.on_event("startup")

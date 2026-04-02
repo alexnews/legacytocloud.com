@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.pipeline.news_models import Article
 from app.rag.llm_client import check_ollama, generate_stream
-from app.rag.retriever import find_similar_articles
+from app.rag.retriever import find_similar_articles, keyword_search_articles
 from app.rag.schemas import ChatRequest, ChatSource, ChatStatusResponse
 
 logger = logging.getLogger(__name__)
@@ -67,40 +67,30 @@ def _sse(data: dict) -> str:
 
 @router.post("/chat")
 async def chat(req: ChatRequest, db: AsyncSession = Depends(get_db)):
-    """RAG chat: embed question → find similar articles → stream LLM answer."""
+    """RAG chat: embed question → find similar articles → stream answer."""
 
-    # 1. Check embedder is available
-    if not _check_embedder():
-        async def no_embedder():
-            yield _sse({"sources": []})
-            yield _sse({"token": "The embedding model is still loading or not installed on this server. "
-                                  "Vector search is temporarily unavailable."})
-            yield _sse({"done": True})
-        return StreamingResponse(no_embedder(), media_type="text/event-stream")
+    articles = []
 
-    # 2. Embed the question
-    try:
-        from app.rag.embedder import embed_text
-        query_vec = embed_text(req.question)
-    except Exception as exc:
-        logger.error("Embedding error: %s", exc)
-        async def embed_error():
-            yield _sse({"sources": []})
-            yield _sse({"token": "Failed to generate embedding for your question. Please try again later."})
-            yield _sse({"done": True})
-        return StreamingResponse(embed_error(), media_type="text/event-stream")
+    # Try vector search first
+    if _check_embedder():
+        try:
+            from app.rag.embedder import embed_text
+            query_vec = embed_text(req.question)
+            articles = await find_similar_articles(query_vec, db, top_k=5)
+        except Exception as exc:
+            logger.warning("Vector search failed, falling back to keyword: %s", exc)
 
-    # 3. Find similar articles
-    try:
-        articles = await find_similar_articles(query_vec, db, top_k=5)
-    except Exception as exc:
-        logger.error("Vector search error: %s", exc)
-        articles = []
+    # Fallback to keyword search
+    if not articles:
+        try:
+            articles = await keyword_search_articles(req.question, db, top_k=5)
+        except Exception as exc:
+            logger.error("Keyword search also failed: %s", exc)
 
     if not articles:
         async def no_articles():
             yield _sse({"sources": []})
-            yield _sse({"token": "No articles have been indexed yet. Embeddings need to be generated first."})
+            yield _sse({"token": "No matching articles found. Try different keywords."})
             yield _sse({"done": True})
         return StreamingResponse(no_articles(), media_type="text/event-stream")
 

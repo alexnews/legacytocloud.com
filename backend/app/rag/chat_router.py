@@ -12,7 +12,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.pipeline.news_models import Article
-from app.rag.embedder import embed_text
 from app.rag.llm_client import check_ollama, generate_stream
 from app.rag.retriever import find_similar_articles
 from app.rag.schemas import ChatRequest, ChatSource, ChatStatusResponse
@@ -20,6 +19,22 @@ from app.rag.schemas import ChatRequest, ChatSource, ChatStatusResponse
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# Lazy-check whether sentence-transformers is available
+_embedder_available: bool | None = None
+
+
+def _check_embedder() -> bool:
+    global _embedder_available
+    if _embedder_available is None:
+        try:
+            from app.rag.embedder import get_model
+            get_model()
+            _embedder_available = True
+        except Exception as exc:
+            logger.warning("Embedding model not available: %s", exc)
+            _embedder_available = False
+    return _embedder_available
 
 
 @router.get("/chat/status", response_model=ChatStatusResponse)
@@ -29,9 +44,12 @@ async def chat_status(db: AsyncSession = Depends(get_db)):
         select(func.count(Article.id)).where(Article.status == "published")
     ) or 0
 
-    embedded = await db.scalar(
-        text("SELECT count(*) FROM pipeline.article_embeddings")
-    ) or 0
+    try:
+        embedded = await db.scalar(
+            text("SELECT count(*) FROM pipeline.article_embeddings")
+        ) or 0
+    except Exception:
+        embedded = 0
 
     ollama_ok = await check_ollama()
 
@@ -43,29 +61,50 @@ async def chat_status(db: AsyncSession = Depends(get_db)):
     )
 
 
+def _sse(data: dict) -> str:
+    return f"data: {json.dumps(data)}\n\n"
+
+
 @router.post("/chat")
 async def chat(req: ChatRequest, db: AsyncSession = Depends(get_db)):
-    """RAG chat: embed question → find similar articles → stream LLM answer.
+    """RAG chat: embed question → find similar articles → stream LLM answer."""
 
-    Returns Server-Sent Events:
-      - First event: {"sources": [...]}  (retrieved articles)
-      - Subsequent events: {"token": "..."}  (streamed LLM tokens)
-      - Final event: {"done": true}
-    """
-    # 1. Embed the question
-    query_vec = embed_text(req.question)
+    # 1. Check embedder is available
+    if not _check_embedder():
+        async def no_embedder():
+            yield _sse({"sources": []})
+            yield _sse({"token": "The embedding model is still loading or not installed on this server. "
+                                  "Vector search is temporarily unavailable."})
+            yield _sse({"done": True})
+        return StreamingResponse(no_embedder(), media_type="text/event-stream")
 
-    # 2. Find similar articles
-    articles = await find_similar_articles(query_vec, db, top_k=5)
+    # 2. Embed the question
+    try:
+        from app.rag.embedder import embed_text
+        query_vec = embed_text(req.question)
+    except Exception as exc:
+        logger.error("Embedding error: %s", exc)
+        async def embed_error():
+            yield _sse({"sources": []})
+            yield _sse({"token": "Failed to generate embedding for your question. Please try again later."})
+            yield _sse({"done": True})
+        return StreamingResponse(embed_error(), media_type="text/event-stream")
+
+    # 3. Find similar articles
+    try:
+        articles = await find_similar_articles(query_vec, db, top_k=5)
+    except Exception as exc:
+        logger.error("Vector search error: %s", exc)
+        articles = []
 
     if not articles:
         async def no_articles():
-            yield f"data: {json.dumps({'sources': []})}\n\n"
-            yield f"data: {json.dumps({'token': 'No articles found in the database. Please make sure articles have been embedded.'})}\n\n"
-            yield f"data: {json.dumps({'done': True})}\n\n"
+            yield _sse({"sources": []})
+            yield _sse({"token": "No articles have been indexed yet. Embeddings need to be generated first."})
+            yield _sse({"done": True})
         return StreamingResponse(no_articles(), media_type="text/event-stream")
 
-    # 3. Build sources list
+    # 4. Build sources list
     sources = [
         ChatSource(
             title=a["title"],
@@ -76,32 +115,29 @@ async def chat(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         for a in articles
     ]
 
-    # 4. Stream LLM response
+    # 5. Stream response
     async def event_stream():
-        # Send sources first
-        yield f"data: {json.dumps({'sources': [s.model_dump() for s in sources]})}\n\n"
+        yield _sse({"sources": [s.model_dump() for s in sources]})
 
-        # Check Ollama
         ollama_ok = await check_ollama()
         if not ollama_ok:
             # Fallback: return article summaries without LLM
-            yield f"data: {json.dumps({'token': 'Ollama is not running. Here are the most relevant articles:\\n\\n'})}\n\n"
+            yield _sse({"token": "Here are the most relevant articles I found:\n\n"})
             for i, a in enumerate(articles[:3], 1):
-                summary = a.get("summary") or (a.get("content") or "")[:200]
+                summary = a.get("summary") or (a.get("content") or "")[:300]
                 title = a["title"]
-                msg = f"{i}. **{title}**\n{summary}\n\n"
-                yield f"data: {json.dumps({'token': msg})}\n\n"
-            yield f"data: {json.dumps({'done': True})}\n\n"
+                yield _sse({"token": f"**{i}. {title}**\n{summary}\n\n"})
+            yield _sse({"done": True})
             return
 
         # Stream from Ollama
         try:
             async for token in generate_stream(req.question, articles):
-                yield f"data: {json.dumps({'token': token})}\n\n"
+                yield _sse({"token": token})
         except Exception as exc:
             logger.error("LLM streaming error: %s", exc)
-            yield f"data: {json.dumps({'token': f'\\n\\n[Error generating response: {exc}]'})}\n\n"
+            yield _sse({"token": f"\n\n[Error generating response: {exc}]"})
 
-        yield f"data: {json.dumps({'done': True})}\n\n"
+        yield _sse({"done": True})
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")

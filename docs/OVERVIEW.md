@@ -2,8 +2,8 @@
 
 **Domain:** legacytocloud.com
 **Owner:** Alex Kargin
-**Status:** Paused (live but not actively developed)
-**Last Updated:** 2026-03-31
+**Status:** Active — building AI/ML features (Phase 1)
+**Last Updated:** 2026-04-02
 
 ## What This Is
 
@@ -35,7 +35,10 @@ Additionally, the site pulls and displays industry news articles from a Coollink
 - SEO pages live: migration guides (MySQL, MSSQL, PostgreSQL, MariaDB, Aurora → Snowflake), glossary, FAQ, tips
 - Google Search Console and Bing Webmaster verified
 - Google Analytics active (G-9TD57H49VG)
-- Project is paused — no active development, waiting for a new direction
+- **NEW:** RAG chat feature (pgvector + sentence-transformers + Ollama) — `/chat` page
+- **NEW:** dbt project with staging/mart models, tests, and SQL exercises
+- **NEW:** Analytics dashboard — `/analytics` page
+- Active development resumed 2026-04-01, building toward AI Data Engineer portfolio
 
 ## Key Links
 

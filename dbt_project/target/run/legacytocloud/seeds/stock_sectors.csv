@@ -1,0 +1,14 @@
+
+    
+    
+    
+    create table "legacytocloud"."pipeline"."stock_sectors" ("symbol" text,"company_name" text,"sector" text)
+  ;
+    -- dbt seed --
+    
+          insert into "legacytocloud"."pipeline"."stock_sectors" ("symbol", "company_name", "sector") values
+          (%s,%s,%s),(%s,%s,%s),(%s,%s,%s),(%s,%s,%s)
+      
+
+;
+  

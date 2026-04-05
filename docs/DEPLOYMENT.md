@@ -1,6 +1,6 @@
 # Deployment
 
-**Last Updated:** 2026-03-31
+**Last Updated:** 2026-04-05
 **Server:** white (162.217.147.94)
 **SSH:** `ssh dundee@white`
 
@@ -115,4 +115,11 @@ Let's Encrypt via certbot, auto-renewed:
 ```bash
 curl https://www.legacytocloud.com/api/health
 curl https://www.legacytocloud.com/api/news?limit=1
+curl https://www.legacytocloud.com/api/convert/formats
+curl https://www.legacytocloud.com/api/chat/status
+
+# Test converter (upload a CSV)
+echo 'id,name\n1,Alice' > /tmp/test.csv
+curl -X POST "https://www.legacytocloud.com/api/convert?outputFormat=mysql" \
+  -F "file=@/tmp/test.csv" -o /tmp/result.zip
 ```

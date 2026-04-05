@@ -1,6 +1,6 @@
 # SEO Setup
 
-**Last Updated:** 2026-03-31
+**Last Updated:** 2026-04-05
 
 ## Verification & Analytics
 
@@ -58,18 +58,30 @@ Crawl-delay: 1
 - Images downloaded and resized (max 1000px width)
 - IndexNow ping on new article sync (Yandex + Bing)
 
+## Converter SEO (NEW — highest priority)
+
+Target keywords for the converter landing pages:
+- "convert csv to mysql online"
+- "convert sqlite to postgresql online"
+- "convert sql to csv online"
+- "convert dbf to excel online"
+- "convert excel to sqlite online"
+- "online database converter"
+- "sql file converter"
+- "[source] to [target] converter free"
+
+**Planned:** 200+ SEO landing pages at `/convert/[source]-to-[target]` with format-specific content, tips, and examples. Each page includes the converter widget. See PLAN.md Phase 3.
+
 ## Primary Keywords
 
-- data engineering portfolio
-- real-time finance analytics
-- stock analytics pipeline
-- database migration tool
-- MySQL/MSSQL/PostgreSQL to Snowflake
-- ClickHouse analytics
-- FastAPI + PostgreSQL
+- **Converter:** online database converter, sql file converter, csv to mysql, sqlite to postgresql
+- **Migration:** database migration tool, MySQL/MSSQL/PostgreSQL to Snowflake
+- **Portfolio:** data engineering portfolio, real-time finance analytics, stock analytics pipeline
+- ClickHouse analytics, FastAPI + PostgreSQL
 
 ## Content Strategy
 
+- **Converter pages** target high-intent "[format] to [format] online" queries (highest traffic potential)
 - Migration guide pages target long-tail "[source] to Snowflake migration" queries
 - News section provides fresh content for crawlers
 - Demo dashboard and architecture pages showcase technical depth

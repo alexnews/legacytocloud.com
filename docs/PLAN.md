@@ -1,6 +1,6 @@
 # Current Plan
 
-**Last Updated:** 2026-04-02
+**Last Updated:** 2026-04-05
 
 ## Status: Active — Building Database File Converter (rebasedata.com competitor)
 
@@ -10,102 +10,30 @@ New direction: online database file conversion tool. Upload a file → pick targ
 
 ---
 
-## Phase 1: MVP Converter (NOW — target: 1-2 weeks)
+## Phase 1: MVP Converter (DONE — 2026-04-02)
 
-**Goal:** Working converter for the 6 easiest source formats
+**Built:** `backend/app/converter/` module with full pipeline.
 
-### Backend: `backend/app/api/converter.py` (new FastAPI router)
+| Component | File | Status |
+|-----------|------|--------|
+| API endpoint | `converter/router.py` | Done — POST `/api/convert?outputFormat=X` |
+| Format detection | `converter/detect.py` | Done — extension-based + SQL dialect sniffing |
+| Data model | `converter/models.py` | Done — ConvertedData / TableData / ColumnInfo |
+| Readers | `converter/readers.py` | Done — CSV, Excel, SQLite, SQL dump, DBF |
+| Writers | `converter/writers.py` | Done — CSV, XLSX, MySQL, PostgreSQL, SQLite |
+| Frontend | `frontend/src/app/convert/page.tsx` | Done — drag-drop, format picker, download |
+| Nav | `SiteHeader.tsx` | Done — "Convert" link added |
 
-**Architecture:**
-- POST `/api/convert` — multipart upload, query param `outputFormat`
-- Detect input format by file extension
-- Parse/convert using Python libraries
-- Return ZIP file with converted output
-- Rate limit: 5 conversions/day per IP, 10MB file size limit (free tier)
+**Conversion matrix: 6 sources × 5 targets = 30 paths**
 
-**Source formats to support (Phase 1):**
+Sources: CSV (.csv/.tsv), Excel (.xls/.xlsx), SQLite (.sqlite/.db), SQL dump (.sql), DBF (.dbf)
+Targets: CSV, XLSX, MySQL, PostgreSQL, SQLite
 
-| # | Format | Extension(s) | Python Library | Notes |
-|---|--------|-------------|---------------|-------|
-| 1 | CSV | .csv | pandas | Trivial |
-| 2 | Excel | .xls, .xlsx | pandas + openpyxl + xlrd | Trivial |
-| 3 | SQLite | .sqlite, .db, .sqlite3 | sqlite3 (built-in) | Trivial |
-| 4 | SQL dump | .sql | sqlglot | Parse DDL+data, detect dialect |
-| 5 | DBF/DBase | .dbf | dbfread | Easy, legacy format |
-| 6 | T-SQL dump | .sql (auto-detect) | sqlglot | SQL Server dialect |
-
-**Target formats (Phase 1):**
-
-| # | Format | Library | Output |
-|---|--------|---------|--------|
-| 1 | CSV | pandas | One .csv per table |
-| 2 | XLSX | pandas + openpyxl | One .xlsx per table |
-| 3 | MySQL | sqlglot | Single .sql dump |
-| 4 | PostgreSQL | sqlglot | Single .sql dump |
-| 5 | SQLite | sqlite3 | Single .sqlite file |
-
-**Conversion matrix: 6 sources × 5 targets = 30 conversions (minus same-to-same)**
-
-### Backend implementation steps:
-
-1. **Install new deps** — add to `requirements.txt`:
-   ```
-   sqlglot>=25.0.0
-   dbfread>=2.0.7
-   xlrd>=2.0.1
-   ```
-   (pandas and openpyxl already installed)
-
-2. **Create converter module** — `backend/app/converter/` with:
-   - `router.py` — FastAPI endpoint (upload + convert + return ZIP)
-   - `detect.py` — detect input format from extension + content sniffing
-   - `readers.py` — parse each source format into a common internal format:
-     ```python
-     # Common format: list of tables, each table = name + columns + rows
-     ConvertedData = list[TableData]
-     TableData = { "name": str, "columns": list[str], "rows": list[list], "ddl": str | None }
-     ```
-   - `writers.py` — write internal format to each target format
-   - `sql_converter.py` — sqlglot-based SQL dialect conversion (DDL + DML)
-
-3. **Wire into FastAPI** — add router to `app/main.py` with prefix `/api`
-
-4. **File handling:**
-   - Save uploaded file to temp dir
-   - Process and convert
-   - ZIP the output
-   - Return ZIP as streaming response
-   - Clean up temp files
-
-### Frontend: `/convert` page + SEO landing pages
-
-5. **Main converter page** — `frontend/src/app/convert/page.tsx`:
-   - Drag-and-drop upload zone
-   - Auto-detect source format, show it
-   - Dropdown to pick target format
-   - "Convert" button
-   - Download link when done
-   - Show schema analysis / risk warnings (our differentiator!)
-
-6. **SEO landing pages** — `frontend/src/app/convert/[slug]/page.tsx`:
-   - Template-based: `/convert/csv-to-mysql`, `/convert/sqlite-to-postgresql`, etc.
-   - Generate ~100 pages from the conversion matrix (include aliases like psql, pgsql, postgres, postgresql)
-   - Each page has: title, description, format-specific tips, the same upload widget
-   - Add all to sitemap
-
-7. **Update site nav** — add "Convert" link to header
-
-### Deploy:
-8. Commit + push
-9. SSH to server:
-   ```bash
-   cd /usr/local/www/legacytocloud.com
-   git pull
-   cd backend && source venv/bin/activate
-   pip install -r requirements.txt
-   sudo systemctl restart legacytocloud-api
-   cd ../frontend && npm install && npm run build
-   ```
+### Still to do in Phase 1:
+- [ ] Deploy to production server
+- [ ] Add rate limiting (5/day per IP)
+- [ ] Add schema analysis warnings to conversion output (our differentiator)
+- [ ] SEO landing pages — `/convert/[slug]` template pages
 
 ---
 
@@ -163,19 +91,3 @@ New direction: online database file conversion tool. Upload a file → pick targ
 - [x] Analytics dashboard (`/analytics` page)
 - [x] Graceful fallback when embedder/Ollama unavailable
 
----
-
-### Completed (Original MVP)
-- [x] FastAPI backend with auth, projects, connections, schema analysis
-- [x] SQL file upload and parsing
-- [x] Snowflake DDL generation with type mapping
-- [x] Risk detection (missing PKs, ENUM types, large tables, encoding)
-- [x] Live database connection testing (MySQL, PostgreSQL, MSSQL)
-- [x] Finance analytics pipeline (Alpha Vantage → PG → ClickHouse → API → Dashboard)
-- [x] News section (Coollinks MySQL → PostgreSQL → frontend)
-- [x] SEO landing pages (5 migration guides + glossary + FAQ + tips)
-- [x] Google Search Console + Bing Webmaster verification
-- [x] Google Analytics (G-9TD57H49VG)
-- [x] GitHub Actions CI/CD
-- [x] Dynamic sitemap generator
-- [x] IndexNow integration

@@ -1,6 +1,6 @@
 # Architecture
 
-**Last Updated:** 2026-03-31
+**Last Updated:** 2026-04-05
 
 ## Server Layout
 
@@ -15,18 +15,22 @@ Apache (port 80/443)
   └── Proxy: /api/* → 127.0.0.1:8003
 
 FastAPI (port 8003, systemd: legacytocloud-api)
+  ├── File Converter (upload → convert → download ZIP)
   ├── Auth (JWT, bcrypt)
   ├── Projects CRUD
   ├── Connections (encrypted passwords)
   ├── Schema Analysis
   ├── Pipeline API (stock data from ClickHouse)
-  └── News API (articles from PostgreSQL)
+  ├── News API (articles from PostgreSQL)
+  ├── Chat/RAG API (pgvector + keyword search)
+  └── Analytics API
 
 PostgreSQL (native)
   └── Schema: pipeline
       ├── users, projects, connections (app data)
       ├── raw_stock_prices (ingested from Alpha Vantage)
-      └── articles (pulled from Coollinks MySQL)
+      ├── articles (pulled from Coollinks MySQL)
+      └── article_embeddings (pgvector, 384-dim vectors)
 
 ClickHouse (native)
   └── Database: pipeline
@@ -39,6 +43,12 @@ Coollinks MySQL (external, same server)
 ```
 
 ## API Endpoints
+
+### File Converter
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /api/convert/formats | List supported source and target formats |
+| POST | /api/convert?outputFormat=X | Upload file, convert, return ZIP |
 
 ### Core App
 | Method | Path | Description |
@@ -73,6 +83,17 @@ Coollinks MySQL (external, same server)
 | GET | /api/news/{slug} | Single article by slug |
 | GET | /api/news/sources | Distinct sources with counts |
 
+### Chat / RAG
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /api/chat/status | Embedding count, Ollama status |
+| POST | /api/chat | RAG chat (SSE stream): vector search → keyword fallback → article summaries |
+
+### Analytics
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /api/analytics/* | Analytics dashboard data |
+
 ## Database Tables
 
 ### PostgreSQL (schema: pipeline)
@@ -82,6 +103,7 @@ Coollinks MySQL (external, same server)
 **connections** — Database connections (host, port, db_name, encrypted_password, db_type: mysql/postgresql/mssql)
 **raw_stock_prices** — Ingested stock data (symbol, trade_date, OHLCV)
 **articles** — News articles pulled from Coollinks (pipeline_id, title, slug, content, summary, source, image_url, quality_score, status, published_at)
+**article_embeddings** — pgvector embeddings for RAG (article_id, embedding vector(384), model_name)
 **pipeline_runs** — ETL run tracking (run_type, status, rows_processed, error_message)
 
 ### ClickHouse (database: pipeline)
@@ -123,7 +145,13 @@ Coollinks MySQL (external, same server)
 legacytocloud.com/
 ├── backend/
 │   ├── app/
-│   │   ├── api/           # health, auth, projects, connections, analysis
+│   │   ├── api/           # health, auth, projects, connections, analysis, analytics
+│   │   ├── converter/     # File conversion engine
+│   │   │   ├── router.py         # POST /api/convert endpoint
+│   │   │   ├── detect.py         # Format detection + target aliases
+│   │   │   ├── models.py         # ConvertedData, TableData, ColumnInfo
+│   │   │   ├── readers.py        # CSV, Excel, SQLite, SQL dump, DBF readers
+│   │   │   └── writers.py        # CSV, XLSX, MySQL, PostgreSQL, SQLite writers
 │   │   ├── core/          # config, database, security, encryption
 │   │   ├── models/        # SQLAlchemy models
 │   │   ├── pipeline/      # stock pipeline (ingest, transform, clickhouse)
@@ -133,14 +161,16 @@ legacytocloud.com/
 │   │   │   ├── ingest.py         # Alpha Vantage ingestion
 │   │   │   ├── transform.py      # PG → ClickHouse transform
 │   │   │   └── clickhouse.py     # ClickHouse client
+│   │   ├── rag/           # RAG chat (embedder, retriever, llm_client, chat_router)
 │   │   └── services/      # db_connector, schema_analyzer, sql_parser, ddl_generator
-│   ├── alembic/           # database migrations
-│   └── scripts/           # pull_news.py, refresh_pipeline.py
+│   ├── alembic/           # database migrations (001-005)
+│   └── scripts/           # pull_news.py, refresh_pipeline.py, embed_articles.py
+├── dbt_project/           # dbt models (staging + marts), exercises
 ├── frontend/
 │   └── src/
-│       ├── app/           # Next.js pages (dashboard, auth, SEO pages, news, demo)
+│       ├── app/           # Next.js pages (convert, chat, analytics, news, demo, SEO)
 │       ├── components/    # SiteHeader, SiteFooter, DashboardLayout, pipeline/*
-│       ├── lib/           # api.ts, news-api.ts
+│       ├── lib/           # api.ts, news-api.ts, chat-api.ts, analytics-api.ts
 │       └── types/         # TypeScript types
 ├── config/
 │   ├── apache/            # legacytocloud.conf, legacytocloud-prod.conf
